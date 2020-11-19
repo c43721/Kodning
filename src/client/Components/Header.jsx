@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
@@ -6,6 +6,10 @@ import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import { makeStyles } from "@material-ui/core/styles";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+
+import { Link } from "@reach/router";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -14,13 +18,30 @@ const useStyles = makeStyles((theme) => ({
   menuButton: {
     marginRight: theme.spacing(2),
   },
+  buttonText: {
+    color: "#FFF",
+  },
   title: {
     flexGrow: 1,
+  },
+  link: {
+    textDecoration: "none",
   },
 }));
 
 export default function Header() {
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
   const classes = useStyles();
+  const login = false;
 
   return (
     <div className={classes.root}>
@@ -37,13 +58,37 @@ export default function Header() {
           <Typography variant="h6" className={classes.title}>
             Kodning
           </Typography>
-          <Button color="inherit">Login</Button>
+          {login ? (
+            <Link to="/test" className={classes.link}>
+              <Button variant="text" className={classes.buttonText}>
+                Login
+              </Button>
+            </Link>
+          ) : (
+            <>
+              <Button
+                aria-controls="simple-menu"
+                aria-haspopup="true"
+                variant="contained"
+                onClick={handleMenuOpen}
+              >
+                Account
+              </Button>
+              <Menu
+                id="simple-menu"
+                anchorEl={anchorEl}
+                keepMounted
+                open={Boolean(anchorEl)}
+                onClose={handleMenuClose}
+              >
+                <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+                <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+                <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+              </Menu>
+            </>
+          )}
         </Toolbar>
       </AppBar>
     </div>
   );
-}
-
-function UserLoggedIn() {
-  return <p>Logged in!</p>;
 }

@@ -2,6 +2,7 @@
 body {
     margin: 0;
     font-family: 'Raleway', sans-serif;
+    overflow-x: hidden;
 }
 
 #root {
