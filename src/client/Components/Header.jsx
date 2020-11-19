@@ -27,6 +27,10 @@ const useStyles = makeStyles((theme) => ({
   link: {
     textDecoration: "none",
   },
+  menuLink: {
+    textDecoration: "none",
+    color: "#000",
+  },
 }));
 
 export default function Header() {
@@ -81,9 +85,17 @@ export default function Header() {
                 open={Boolean(anchorEl)}
                 onClose={handleMenuClose}
               >
-                <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-                <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-                <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+                <MenuItem>
+                  <Link to="/test" className={classes.menuLink}>
+                    View Profile
+                  </Link>
+                </MenuItem>
+                <MenuItem>
+                  <Link to="/test" className={classes.menuLink}>
+                    Friends
+                  </Link>
+                </MenuItem>
+                <MenuItem>Logout</MenuItem>
               </Menu>
             </>
           )}
