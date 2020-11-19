@@ -45,7 +45,5 @@ export default function Header() {
 }
 
 function UserLoggedIn() {
-    return (
-        <p>Logged in!</p>
-    )
+  return <p>Logged in!</p>;
 }
