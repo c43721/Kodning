@@ -3,6 +3,7 @@ import { Router } from "@reach/router";
 import HomePage from "./Pages/HomePage";
 import TestPage from "./Pages/TestPage";
 import SignInPage from "./Pages/SignInPage";
+import FriendsPage from "./pages/FriendsPage";
 
 export default function App() {
   return (
@@ -10,6 +11,7 @@ export default function App() {
       <HomePage path="/" />
       <TestPage path="/test" />
       <SignInPage path="sign__in__page" />
+      <FriendsPage path="Friends__Page" />
     </Router>
   );
 }
