@@ -11,7 +11,7 @@ export default function App() {
       <HomePage path="/" />
       <TestPage path="/test" />
       <SignInPage path="sign__in__page" />
-      <FriendsPage path="Friends__Page" />
+      <FriendsPage path="/friends" />
     </Router>
   );
 }

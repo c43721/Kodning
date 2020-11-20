@@ -50,7 +50,7 @@ export default function HomePage() {
               </BrowserLink>
               </Grid>
               <Grid item>
-              <BrowserLink to="/Friends__Page" className={classes.link}>
+              <BrowserLink to="/friends" className={classes.link}>
                 <Button variant="contained">My Friends</Button>
               </BrowserLink>
             </Grid>
