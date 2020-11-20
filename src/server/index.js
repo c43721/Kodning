@@ -1,14 +1,16 @@
 const express = require("express");
-const os = require("os");
 
 const app = express();
-//const { auth } = require('../api/auth');
+const AuthRoute = require("./routes/auth");
 
 app.use(express.static("dist"));
-app.get("/api/getUsername", (req, res) =>
-  res.send({ username: os.userInfo().username })
-);
+
+app.all("*", (req, res) => {
+	res.send("This is from the ALL route");
+});
+
+app.use("/auth", AuthRoute);
 
 app.listen(process.env.PORT || 8080, () =>
-  console.log(`Listening on port http://localhost:${process.env.PORT || 8080}/!`)
+	console.log(`Listening on port http://localhost:${process.env.PORT || 8080}/!`)
 );
