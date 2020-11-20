@@ -35,20 +35,20 @@ router.post("/signup", async (req, res) => {
 		if (user) return res.status(400).json({ error: "User already registered." });
 
 		const salt = await bcrypt.genSalt(10);
+
 		user = new User({
-			username: req.body.name,
+			username: req.body.username,
 			email: req.body.email,
 			password: await bcrypt.hash(req.body.password, salt)
 		});
 
 		await user.save();
-
 		const token = user.generateAuthToken();
 
 		return res
 			.header("x-auth-token", token)
 			.header("access-control-expose-headers", "x-auth-token")
-			.json({ _id: user._id, name: user.name, email: user.email });
+			.json({ _id: user._id, username: user.username, email: user.email });
 	} catch (ex) {
 		return res.status(500).json({ error: `Internal Server Error: ${ex}` });
 	}
