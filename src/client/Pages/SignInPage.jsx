@@ -43,14 +43,15 @@ const useStyles = makeStyles((theme) => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
-  },
+  }
+
 }));
 
 export default function SignIn() {
   const classes = useStyles();
 
-  return (
-    <Container component="main" maxWidth="xs">
+    return (
+    <Container  component="main" maxWidth="xs" >
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
@@ -94,7 +95,7 @@ export default function SignIn() {
             className={classes.submit}
           >
             Sign In
-          </Button>
+          </Button >
           <Grid container>
             <Grid item xs>
               <Link href="#" variant="body2">
@@ -114,4 +115,5 @@ export default function SignIn() {
       </Box>
     </Container>
   );
+
 }
