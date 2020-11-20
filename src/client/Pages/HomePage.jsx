@@ -40,7 +40,7 @@ export default function HomePage() {
             className={classes.actionButtons}
           >
             <Grid item>
-              <BrowserLink to="/test" className={classes.link}>
+              <BrowserLink to="/sign__in__page" className={classes.link}>
                 <Button variant="contained">Sign In</Button>
               </BrowserLink>
             </Grid>
