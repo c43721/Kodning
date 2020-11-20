@@ -47,11 +47,6 @@ export default function HomePage() {
                 <Button variant="contained">Sign Up</Button>
               </BrowserLink>
             </Grid>
-            <Grid item>
-              <BrowserLink to="/feed" className={classes.link}>
-                <Button variant="contained">Feed</Button>
-              </BrowserLink>
-            </Grid>
           </Grid>
         </Grid>
       </Container>
