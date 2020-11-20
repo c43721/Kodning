@@ -1,5 +1,0 @@
-{
-    "mongoURI": "http://localhost:8080/",
-    "jwtSecret": "JWT SECRET HERE"
-    
-}

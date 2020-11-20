@@ -1,4 +1,0 @@
-{
-    "mongoURI": "CONNECT URI HERE",
-    "jwtSecret": "JWT SECRET HERE"
-}

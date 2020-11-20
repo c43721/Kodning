@@ -4,3 +4,5 @@ dist
 *.log
 yarn.lock
 src/server/config/default.json
+default.json
+config/default.json
