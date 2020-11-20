@@ -5,6 +5,7 @@ import TestPage from "./Pages/TestPage";
 import SignUpPage from "./Pages/SignUpPage";
 import Feed from "./Pages/Feed";
 import SignInPage from "./Pages/SignInPage";
+import FriendsPage from "./pages/FriendsPage";
 
 export default function App() {
   return (
@@ -14,6 +15,7 @@ export default function App() {
       <SignUpPage path="/sign-up" />
       <Feed path="/feed" />
       <SignInPage path="sign__in__page" />
+      <FriendsPage path="/friends" />
     </Router>
   );
 }
