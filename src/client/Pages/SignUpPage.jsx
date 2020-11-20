@@ -6,6 +6,8 @@ import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
+import { Link as BrowserLink } from "@reach/router";
+// import Image from "../Image/coding-image.jpg";
 
 function Copyright() {
   return (
@@ -23,18 +25,32 @@ function Copyright() {
 const useStyles = makeStyles(theme => ({
   forms: {
     width: "100",
-    marginBottom: theme.spacing(2),
+    margin: theme.spacing(2, 0, 2, 0),
     paddingRight: theme.spacing(4),
     paddingLeft: theme.spacing(4),
   },
-  submit: {},
+  image: {
+    backgroundImage: `url(${Image})`,
+  },
+  input: {
+    border: "none",
+    borderBottom: "1px solid black",
+  },
+  container: {
+    width: "100%",
+    height: "100%",
+    backgroundColor: "#85DBCB",
+  },
+  submit: {
+    width: "40%",
+  },
 }));
 
 export default function SignUp() {
   const classes = useStyles();
 
   return (
-    <Grid container>
+    <Grid container className={classes.container}>
       <Grid item xs="6">
         <img
           src="https://img.freepik.com/free-vector/programmer-s-workplace-writing-code-laptop_80328-238.jpg?size=626&ext=jpg"
@@ -105,16 +121,16 @@ export default function SignUp() {
                   id="confirmPassword"
                   autoComplete="current-password"
                 />
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  className={classes.submit}>
+                  Sign Up
+                </Button>
               </Grid>
             </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}>
-              Sign Up
-            </Button>
             <Grid container justify="center">
               <Grid item>
                 <Link href="#" variant="body2">
@@ -124,10 +140,10 @@ export default function SignUp() {
             </Grid>
           </form>
         </div>
+        <Box mt={5}>
+          <Copyright />
+        </Box>
       </Grid>
-      <Box mt={5}>
-        <Copyright />
-      </Box>
     </Grid>
   );
 }
