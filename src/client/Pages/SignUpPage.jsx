@@ -7,7 +7,8 @@ import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link as BrowserLink } from "@reach/router";
-// import Image from "../Image/coding-image.jpg";
+import { CardMedia, Card } from "@material-ui/core";
+import Image from "../Image/coding-image.jpg";
 
 function Copyright() {
   return (
@@ -29,20 +30,19 @@ const useStyles = makeStyles(theme => ({
     paddingRight: theme.spacing(4),
     paddingLeft: theme.spacing(4),
   },
+  container: {
+    backgroundColor: "#85DBCB",
+    position: "absolute",
+    top: "0",
+    bottom: "0",
+    right: "0",
+    left: "0",
+  },
   image: {
     backgroundImage: `url(${Image})`,
-  },
-  input: {
-    border: "none",
-    borderBottom: "1px solid black",
-  },
-  container: {
-    width: "100%",
-    height: "100%",
-    backgroundColor: "#85DBCB",
-  },
-  submit: {
-    width: "40%",
+    backgroundRepeat: "no-repeat",
+    backgroundPosition: "center",
+    backgroundSize: "100%",
   },
 }));
 
@@ -51,13 +51,8 @@ export default function SignUp() {
 
   return (
     <Grid container className={classes.container}>
-      <Grid item xs="6">
-        <img
-          src="https://img.freepik.com/free-vector/programmer-s-workplace-writing-code-laptop_80328-238.jpg?size=626&ext=jpg"
-          alt="coding image"
-        />
-      </Grid>
-      <Grid item xs="6">
+      <Grid className={classes.image} xs={false} sm={6} />
+      <Grid item xs="12" sm="6">
         <div>
           <Typography component="h1" variant="h5" className={classes.forms}>
             Sign up
@@ -123,7 +118,7 @@ export default function SignUp() {
                 />
                 <Button
                   type="submit"
-                  fullWidth
+                  size="small"
                   variant="contained"
                   color="primary"
                   className={classes.submit}>

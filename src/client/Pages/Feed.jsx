@@ -3,6 +3,8 @@ import React from "react";
 import Layout from "../Components/Layout";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link as BrowserLink } from "@reach/router";
+import Card from "../Components/Card";
+import TextField from "../Components/TextField";
 
 const useStyles = makeStyles(theme => ({
   homePage: {
@@ -27,27 +29,8 @@ export default function HomePage() {
           justify="flex-end"
           alignItems="center"
           direction="column">
-          <Typography variant="h1">Kodning</Typography>
-          <Typography variant="subtitle1">
-            The central place for coders to thrive. Post something to your story
-            to share with all your friends!
-          </Typography>
-          <Grid
-            container
-            justify="center"
-            spacing={3}
-            className={classes.actionButtons}>
-            <Grid item>
-              <BrowserLink to="/test" className={classes.link}>
-                <Button variant="contained">Sign In</Button>
-              </BrowserLink>
-            </Grid>
-            <Grid item>
-              <BrowserLink to="/sign-up" className={classes.link}>
-                <Button variant="contained">Sign Up</Button>
-              </BrowserLink>
-            </Grid>
-          </Grid>
+          <TextField />
+          <Card />
         </Grid>
       </Container>
     </Layout>
