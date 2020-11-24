@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function HomePage() {
+export default function Feed() {
   const classes = useStyles();
 
   return (

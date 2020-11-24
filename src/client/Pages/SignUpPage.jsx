@@ -7,8 +7,7 @@ import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link as BrowserLink } from "@reach/router";
-import { CardMedia, Card } from "@material-ui/core";
-import Image from "../Image/coding-image.jpg";
+import Image from "../Image/KODNING_LOGO.png";
 
 function Copyright() {
   return (
@@ -26,9 +25,10 @@ function Copyright() {
 const useStyles = makeStyles(theme => ({
   forms: {
     width: "100",
-    margin: theme.spacing(2, 0, 2, 0),
+    margin: theme.spacing(4, 0, 4, 0),
     paddingRight: theme.spacing(4),
     paddingLeft: theme.spacing(4),
+    color: "white",
   },
   container: {
     backgroundColor: "#85DBCB",
@@ -39,10 +39,29 @@ const useStyles = makeStyles(theme => ({
     left: "0",
   },
   image: {
-    backgroundImage: `url(${Image})`,
+    backgroundImage:
+      "url(https://i0.wp.com/bdmpublications.com/wp-content/uploads/2019/05/history-of-coding-1.jpg?resize=780%2C405&ssl=1)",
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
-    backgroundSize: "100%",
+    backgroundSize: "cover",
+  },
+  logo: {
+    color: "white",
+    cursor: "pointer",
+    textDecoration: "none",
+    position: "absolute",
+    padding: theme.spacing(5),
+    fontWeight: "bold",
+    fontSize: "55px",
+  },
+  button: {
+    display: "flex",
+    justifyContent: "center",
+  },
+  copyRight: {
+    display: "flex",
+    justifyContent: "center",
+    marginTop: theme.spacing(3),
   },
 }));
 
@@ -51,8 +70,12 @@ export default function SignUp() {
 
   return (
     <Grid container className={classes.container}>
-      <Grid className={classes.image} xs={false} sm={6} />
-      <Grid item xs="12" sm="6">
+      <Grid className={classes.image} xs="false" sm="7">
+        <BrowserLink className={classes.logo} to="/" xs="false">
+          Kodning
+        </BrowserLink>
+      </Grid>
+      <Grid item xs="12" sm="5">
         <div>
           <Typography component="h1" variant="h5" className={classes.forms}>
             Sign up
@@ -63,7 +86,6 @@ export default function SignUp() {
                 <TextField
                   autoComplete="fname"
                   name="firstName"
-                  variant="outlined"
                   required
                   fullWidth
                   id="firstName"
@@ -73,7 +95,6 @@ export default function SignUp() {
               </Grid>
               <Grid className={classes.forms}>
                 <TextField
-                  variant="outlined"
                   required
                   fullWidth
                   id="lastName"
@@ -84,7 +105,6 @@ export default function SignUp() {
               </Grid>
               <Grid item className={classes.forms}>
                 <TextField
-                  variant="outlined"
                   required
                   fullWidth
                   id="email"
@@ -95,7 +115,6 @@ export default function SignUp() {
               </Grid>
               <Grid item className={classes.forms}>
                 <TextField
-                  variant="outlined"
                   required
                   fullWidth
                   name="password"
@@ -107,26 +126,29 @@ export default function SignUp() {
               </Grid>
               <Grid item className={classes.forms}>
                 <TextField
-                  variant="outlined"
                   required
                   fullWidth
                   name="confirmPassword"
-                  label="Confrim Password"
+                  label="Confirm Password"
                   type="confirmPassword"
                   id="confirmPassword"
                   autoComplete="current-password"
                 />
+              </Grid>
+              <Grid
+                justifyContent="center"
+                display="flex"
+                className={classes.button}>
                 <Button
                   type="submit"
-                  size="small"
+                  size="large"
                   variant="contained"
-                  color="primary"
-                  className={classes.submit}>
+                  color="primary">
                   Sign Up
                 </Button>
               </Grid>
             </Grid>
-            <Grid container justify="center">
+            <Grid container className={classes.copyRight}>
               <Grid item>
                 <Link href="#" variant="body2">
                   Already have an account? Sign in

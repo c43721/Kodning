@@ -5,7 +5,7 @@ import TextField from "@material-ui/core/TextField";
 const useStyles = makeStyles(theme => ({
   root: {
     "& .MuiTextField-root": {
-      margin: theme.spacing(1, 0, 4, 0),
+      margin: theme.spacing(4, 0, 4, 0),
       width: "500px",
     },
   },
@@ -26,7 +26,7 @@ export default function MultilineTextFields() {
           id="outlined-multiline-static"
           multiline
           rows={4}
-          defaultValue="What are you loading?"
+          placeholder="Hello World!"
           variant="outlined"
         />
       </div>

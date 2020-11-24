@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import Card from "@material-ui/core/Card";
@@ -18,11 +18,13 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 
 const useStyles = makeStyles(theme => ({
   root: {
-    maxWidth: 345,
+    maxWidth: 500,
+    borderRadius: "20px",
   },
   media: {
     height: 0,
     paddingTop: "56.25%", // 16:9
+    borderRadius: "20px",
   },
   expand: {
     transform: "rotate(0deg)",
@@ -41,7 +43,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function FeedCard() {
   const classes = useStyles();
-  const [expanded, setExpanded] = React.useState(false);
+  const [expanded, setExpanded] = useState(false);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -65,7 +67,7 @@ export default function FeedCard() {
       />
       <CardMedia
         className={classes.media}
-        image="/static/images/cards/paella.jpg"
+        image="https://edsurge.imgix.net/uploads/post/image/12176/coding-1556754232.jpg?auto=compress%2Cformat&w=1024&h=512&fit=crop"
         title="Paella dish"
       />
       <CardContent>
