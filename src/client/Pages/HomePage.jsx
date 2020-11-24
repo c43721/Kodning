@@ -38,7 +38,7 @@ export default function HomePage() {
             spacing={3}
             className={classes.actionButtons}>
             <Grid item>
-              <BrowserLink to="/sign__in__page" className={classes.link}>
+              <BrowserLink to="/signin" className={classes.link}>
                 <Button variant="contained">Sign In</Button>
               </BrowserLink>
             </Grid>
