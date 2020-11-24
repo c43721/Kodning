@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Link from "@material-ui/core/Link";
@@ -8,6 +8,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link as BrowserLink } from "@reach/router";
 import Image from "../Image/KODNING_LOGO.png";
+import axios from "axios";
 
 function Copyright() {
   return (
@@ -68,6 +69,21 @@ const useStyles = makeStyles(theme => ({
 export default function SignUp() {
   const classes = useStyles();
 
+  const usernameRef = useRef();
+  const emailRef = useRef();
+  const passwordRef = useRef();
+
+  const signUp = async e => {
+    e.preventDefault();
+    const body = {
+      username: usernameRef.current.value,
+      email: emailRef.current.value,
+      password: passwordRef.current.value,
+    };
+    const { data } = await Axios.post("/api/auth/signup", body);
+    console.log(data);
+  };
+
   return (
     <Grid container className={classes.container}>
       <Grid className={classes.image} xs="false" sm="7">
@@ -84,27 +100,19 @@ export default function SignUp() {
             <Grid>
               <Grid className={classes.forms}>
                 <TextField
-                  autoComplete="fname"
-                  name="firstName"
+                  inputRef={usernameRef}
+                  autoComplete="username"
+                  name="username"
                   required
                   fullWidth
-                  id="firstName"
-                  label="First Name"
+                  id="username"
+                  label="Username"
                   autoFocus
-                />
-              </Grid>
-              <Grid className={classes.forms}>
-                <TextField
-                  required
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="lname"
                 />
               </Grid>
               <Grid item className={classes.forms}>
                 <TextField
+                  inputRef={emailRef}
                   required
                   fullWidth
                   id="email"
@@ -115,6 +123,7 @@ export default function SignUp() {
               </Grid>
               <Grid item className={classes.forms}>
                 <TextField
+                  inputRef={passwordRef}
                   required
                   fullWidth
                   name="password"
