@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { emailRef, passwordRef } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -12,6 +12,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import Axios from "Axios";
 
 function Copyright() {
   return (
@@ -50,7 +51,19 @@ const useStyles = makeStyles((theme) => ({
 export default function SignIn() {
   const classes = useStyles();
 
-  return (
+  const emailRef = useRef();
+  const passwordref = useRef();
+
+  const signin = async (e) => {
+      e.preventDefault();
+      body = {
+          email: email.current.value,
+          password: passwordref.current.value
+      }
+      const {data} = await Axios.post("/api/auth/signin", body);
+      console.log(data);
+  }
+    return (
     <Container component="main" maxWidth="xs" >
       <CssBaseline />
       <div className={classes.paper}>
@@ -60,8 +73,9 @@ export default function SignIn() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} noValidate onSubmit={signin}>
           <TextField
+            ref={emailRef}
             variant="outlined"
             margin="normal"
             required
@@ -73,6 +87,7 @@ export default function SignIn() {
             autoFocus
           />
           <TextField
+            ref={passwordRef}
             variant="outlined"
             margin="normal"
             required
@@ -88,7 +103,7 @@ export default function SignIn() {
             label="Remember me"
           />
           <Button
-            type="submit"
+           type="submit"
             fullWidth
             variant="contained"
             color="primary"
