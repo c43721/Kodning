@@ -10,7 +10,8 @@ const postSchema = new mongoose.Schema({
     },
     content: {
         type: String, 
-        required: true
+        required: true,
+        maxlength: 140
     },
     date: {
         type: Date,
@@ -25,6 +26,22 @@ const postSchema = new mongoose.Schema({
         }
     ]
 });
+
+postSchema.methods.generateAuthToken = function () {
+	return jwt.sign({ _id: this._id, content: this.content }, config.get("jwtSecret"));
+};
+
+const Posts = mongoose.model("Post", postSchema);
+
+function validatePosts(blog) {
+	const schema = Joi.object({
+        user: Joi.type().ref(),
+		content: Joi.string().maxlength(140).required(),		
+        date: Joi.date(),
+        likes: Joi.user()
+	});
+	return schema.validate(blog);
+}
 
 module.exports.posts = Posts;
 module.exports.validatePosts = validatePosts;
