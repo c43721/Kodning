@@ -1,4 +1,4 @@
-import React, { emailRef, passwordRef } from 'react';
+import React, { useRef } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -52,13 +52,13 @@ export default function SignIn() {
   const classes = useStyles();
 
   const emailRef = useRef();
-  const passwordref = useRef();
+  const passwordRef = useRef();
 
   const signin = async (e) => {
       e.preventDefault();
-      body = {
-          email: email.current.value,
-          password: passwordref.current.value
+     let body = {
+          email: emailRef.current.value,
+          password: passwordRef.current.value
       }
       const {data} = await Axios.post("/api/auth/signin", body);
       console.log(data);
@@ -113,9 +113,6 @@ export default function SignIn() {
           </Button >
           <Grid container>
             <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
             </Grid>
             <Grid item>
               <Link href="#" variant="body2">
