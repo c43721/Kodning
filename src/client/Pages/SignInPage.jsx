@@ -18,7 +18,7 @@ function Copyright() {
 	return (
 		<Typography variant="body2" color="textSecondary" align="center">
 			{"Copyright © "}
-			<Link color="inherit" href="https://material-ui.com/">
+			<Link color="inherit" href="/">
 				Kodning
 			</Link>{" "}
 			{new Date().getFullYear()}
@@ -99,10 +99,6 @@ export default function SignIn() {
 						id="password"
 						autoComplete="current-password"
 					/>
-					<FormControlLabel
-						control={<Checkbox value="remember" color="primary" />}
-						label="Remember me"
-					/>
 					<Button
 						type="submit"
 						fullWidth
@@ -115,7 +111,7 @@ export default function SignIn() {
 					<Grid container>
 						<Grid item xs></Grid>
 						<Grid item>
-							<Link href="#" variant="body2">
+							<Link href="/sign-up" variant="body2">
 								{"Don't have an account? Sign Up"}
 							</Link>
 						</Grid>
