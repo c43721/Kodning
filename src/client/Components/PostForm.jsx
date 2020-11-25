@@ -44,7 +44,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function PostForm({ onSubmit }) {
+export default function PostForm({ onFormSubmit }) {
   const classes = useStyles();
 
   const CHARACTER_LIMIT = 140;

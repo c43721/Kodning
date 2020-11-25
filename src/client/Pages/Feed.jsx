@@ -8,7 +8,7 @@ import PostForm from "../Components/PostForm";
 
 const useStyles = makeStyles(theme => ({}));
 
-export default function Feed({ onSubmit }) {
+export default function Feed({ onFormSubmit }) {
   const classes = useStyles();
 
   return (
@@ -19,7 +19,7 @@ export default function Feed({ onSubmit }) {
           justify="flex-end"
           alignItems="center"
           direction="column">
-          <PostForm onSubmit={onSubmit} />
+          <PostForm onFormSubmit={onFormSubmit} />
           <Post />
           <Post />
           <Post />

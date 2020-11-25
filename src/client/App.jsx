@@ -18,7 +18,7 @@ export default function App() {
       <HomePage path="/" />
       <TestPage path="/test" />
       <SignUpPage path="/sign-up" />
-      <Feed path="/feed" onSubmit={handleSubmit} />
+      <Feed path="/feed" onFormSubmit={handleSubmit} />
       <SignInPage path="/signin" />
       <FriendsPage path="/friends" />
     </Router>
