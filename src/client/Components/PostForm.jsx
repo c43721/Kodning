@@ -5,7 +5,6 @@ import { Button, Grid } from "@material-ui/core/";
 import AddToPhotosIcon from "@material-ui/icons/AddToPhotos";
 import VideoLibraryIcon from "@material-ui/icons/VideoLibrary";
 import { set } from "mongoose";
-import { kMaxLength } from "buffer";
 import Avatar from "@material-ui/core/Avatar";
 
 const useStyles = makeStyles(theme => ({
@@ -49,7 +48,7 @@ export default function PostForm({ onSubmit }) {
   const classes = useStyles();
 
   const CHARACTER_LIMIT = 140;
-  const [values, setValues] = React.useState({
+  const [values, setValues] = useState({
     character: "",
   });
 
