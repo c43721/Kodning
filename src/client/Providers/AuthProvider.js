@@ -10,7 +10,6 @@ export default class AuthProvider {
 	}
 
 	set token(newToken) {
-		console.log("Setting token");
 		this.localToken = newToken;
 		localStorage.setItem("token", this.localToken);
 		return this.localToken;

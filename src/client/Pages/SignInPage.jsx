@@ -11,7 +11,6 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import axios from "axios";
-import AuthProvider from "../Providers/AuthProvider";
 import { navigate } from "@reach/router";
 import useUser from "../hooks/useUser";
 
@@ -50,7 +49,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function SignIn() {
 	const classes = useStyles();
-	const { setToken } = useUser();
+	const { user, setToken } = useUser();
 
 	const emailRef = useRef();
 	const passwordRef = useRef();

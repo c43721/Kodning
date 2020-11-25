@@ -13,12 +13,14 @@ const UserContext = createContext({
 });
 
 export function UserProvider({ children }) {
-	const [token, setToken] = useState(AuthProvider.provider.token);
+	const getToken = AuthProvider.provider.token;
+	const [token, setToken] = useState(getToken);
 	const [user, setUser] = useState(null);
 
 	useEffect(() => {
 		if (!user && token) {
 			const user = getCurrentUser(token);
+			AuthProvider.provider.token = token;
 			setUser(user);
 		} else if (!token) {
 			AuthProvider.provider.logout();
