@@ -7,7 +7,7 @@ import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link as BrowserLink } from "@reach/router";
-import Image from "../Image/KODNING_LOGO.png";
+import Logo from "../Image/KODNING_LOGO.png";
 import axios from "axios";
 
 function Copyright() {
