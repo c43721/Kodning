@@ -7,8 +7,8 @@ import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link as BrowserLink } from "@reach/router";
-import Logo from "../Logo/kodningLogo.png";
-import Axios from "axios";
+import Image from "../Image/KODNING_LOGO.png";
+import axios from "axios";
 
 function Copyright() {
   return (
@@ -81,9 +81,9 @@ export default function SignUp() {
       email: emailRef.current.value,
       password: passwordRef.current.value,
     };
-    const { data } = await Axios.post("/api/auth/signup", body);
-    console.log(data);
-  };
+		const { data } = await axios.post("/api/auth/signup", body);
+		console.log(data);
+	};
 
   return (
     <Grid container className={classes.container}>
