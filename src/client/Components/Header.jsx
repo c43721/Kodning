@@ -11,7 +11,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 
 import { Link } from "@reach/router";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
   },
@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Header() {
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const handleMenuOpen = (event) => {
+  const handleMenuOpen = event => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -49,14 +49,13 @@ export default function Header() {
 
   return (
     <div className={classes.root}>
-      <AppBar position="static">
+      <AppBar position="static" className={classes.header}>
         <Toolbar>
           <IconButton
             edge="start"
             className={classes.menuButton}
             color="inherit"
-            aria-label="menu"
-          >
+            aria-label="menu">
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
@@ -74,8 +73,7 @@ export default function Header() {
                 aria-controls="simple-menu"
                 aria-haspopup="true"
                 variant="contained"
-                onClick={handleMenuOpen}
-              >
+                onClick={handleMenuOpen}>
                 Account
               </Button>
               <Menu
@@ -83,8 +81,7 @@ export default function Header() {
                 anchorEl={anchorEl}
                 keepMounted
                 open={Boolean(anchorEl)}
-                onClose={handleMenuClose}
-              >
+                onClose={handleMenuClose}>
                 <MenuItem>
                   <Link to="/test" className={classes.menuLink}>
                     View Profile

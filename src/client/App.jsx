@@ -8,12 +8,17 @@ import SignInPage from "./Pages/SignInPage";
 import FriendsPage from "./pages/FriendsPage";
 
 export default function App() {
+  const handleSubmit = e => {
+    e.preventDefault();
+    console.log("clicked");
+  };
+
   return (
     <Router>
       <HomePage path="/" />
       <TestPage path="/test" />
       <SignUpPage path="/sign-up" />
-      <Feed path="/feed" />
+      <Feed path="/feed" onSubmit={handleSubmit} />
       <SignInPage path="/signin" />
       <FriendsPage path="/friends" />
     </Router>

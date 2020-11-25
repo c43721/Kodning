@@ -6,30 +6,20 @@ import { Link as BrowserLink } from "@reach/router";
 import Card from "../Components/Card";
 import TextField from "../Components/TextField";
 
-const useStyles = makeStyles(theme => ({
-  homePage: {
-    height: "100%",
-  },
-  actionButtons: {
-    marginTop: "10px",
-  },
-  link: {
-    textDecoration: "none",
-  },
-}));
+const useStyles = makeStyles(theme => ({}));
 
-export default function Feed() {
+export default function Feed({ onSubmit }) {
   const classes = useStyles();
 
   return (
     <Layout>
-      <Container className={classes.homePage}>
+      <Container>
         <Grid
           container
           justify="flex-end"
           alignItems="center"
           direction="column">
-          <TextField />
+          <TextField onSubmit={onSubmit} />
           <Card />
         </Grid>
       </Container>

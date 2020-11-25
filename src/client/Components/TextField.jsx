@@ -8,25 +8,23 @@ import { set } from "mongoose";
 import { kMaxLength } from "buffer";
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    "& .MuiTextField-root": {
-      width: "500px",
-    },
-  },
   button: {
     display: "flex",
     justifyContent: "center",
-    width: "500px",
     backgroundColor: "#000abf",
     color: "white",
     borderRadius: "20px",
     marginBottom: theme.spacing(4),
   },
-  textbox: {
+  form: {
     display: "flex",
     justifyContent: "center",
     flexDirection: "column",
     margin: theme.spacing(2, 0, 2, 0),
+    minWidth: "500px",
+    [theme.breakpoints.down("xs")]: {
+      width: "20%",
+    },
   },
   icons: {
     display: "flex",
@@ -36,7 +34,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function MultilineTextFields() {
+export default function MultilineTextFields({ onSubmit }) {
   const classes = useStyles();
 
   const CHARACTER_LIMIT = 140;
@@ -48,30 +46,37 @@ export default function MultilineTextFields() {
     setValues({ ...values, [character]: event.target.value });
   };
 
+  const submitHandler = e => {
+    e.preventDefault();
+    console.log("submit");
+  };
+
   return (
     <form className={classes.root} noValidate autoComplete="off">
       <div>
-        <Grid container className={classes.textbox}>
-          <TextField
-            id="outlined-multiline-static"
-            multiline
-            rows={5}
-            placeholder="Hello World!"
-            variant="outlined"
-            inputProps={{
-              maxlength: CHARACTER_LIMIT,
-            }}
-            value={values.character}
-            helperText={`${values.character.length}/${CHARACTER_LIMIT}`}
-            onChange={handleChange("character")}
-            value={values.character}
-          />
-          <Grid container className={classes.icons}>
-            <AddToPhotosIcon />
-            <VideoLibraryIcon />
+        <form onSubmit={submitHandler}>
+          <Grid container className={classes.form}>
+            <TextField
+              id="outlined-multiline-static"
+              multiline
+              rows={5}
+              placeholder="Hello World!"
+              variant="outlined"
+              inputProps={{
+                maxlength: CHARACTER_LIMIT,
+              }}
+              value={values.character}
+              helperText={`${values.character.length}/${CHARACTER_LIMIT}`}
+              onChange={handleChange("character")}
+              value={values.character}
+            />
+            <Grid item className={classes.icons}>
+              <AddToPhotosIcon />
+              <VideoLibraryIcon />
+            </Grid>
+            <Button className={classes.button}>Post</Button>
           </Grid>
-          <Button className={classes.button}>Post</Button>
-        </Grid>
+        </form>
       </div>
     </form>
   );
