@@ -1,6 +1,6 @@
 const express = require("express");
-const { Post } = require("../models/posts");
-const checkAuth = require("../middleware/auth");
+const { Posts, validatePosts } = require("../models/posts");
+const { User, validateUser } = require("../models/user");
 const postRouter = express.Router();
 
 router.get("/api/posts", async (res) => {
@@ -15,16 +15,17 @@ router.get("/api/posts", async (res) => {
 
 router.post("/", async (req, res) => {
         let { content } = req.body;
-        const errors = validationResult(req);
+        const errors = validatePosts(req);
         if (!errors.isEmpty())
         return res.status(400).json({ errors: errors.array() });
         try {
         let user = await User.findById(req.user.id).select("-password");
         if (!user) return res.status(404).json("User not found");
     
-        let newPost = new Post({
+        let newPost = new Posts({
             content,
             name: user.name,
+            date: Date
         });
     
         await newPost.save();
