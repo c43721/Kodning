@@ -4,6 +4,8 @@ import TextField from "@material-ui/core/TextField";
 import { Button, Grid } from "@material-ui/core/";
 import AddToPhotosIcon from "@material-ui/icons/AddToPhotos";
 import VideoLibraryIcon from "@material-ui/icons/VideoLibrary";
+import { set } from "mongoose";
+import { kMaxLength } from "buffer";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -38,14 +40,12 @@ export default function MultilineTextFields() {
   const classes = useStyles();
 
   const CHARACTER_LIMIT = 140;
-  const [count, setCount] = useState(0);
+  const [values, setValues] = React.useState({
+    character: "",
+  });
 
-  const handleChange = () => {
-    if (count >= 140) {
-      return;
-    } else {
-      setCount(count + 1);
-    }
+  const handleChange = character => event => {
+    setValues({ ...values, [character]: event.target.value });
   };
 
   return (
@@ -58,8 +58,13 @@ export default function MultilineTextFields() {
             rows={5}
             placeholder="Hello World!"
             variant="outlined"
-            onChange={event => handleChange(event.target.value.length)}
-            helperText={`${count.length}/${CHARACTER_LIMIT}`}
+            inputProps={{
+              maxlength: CHARACTER_LIMIT,
+            }}
+            value={values.character}
+            helperText={`${values.character.length}/${CHARACTER_LIMIT}`}
+            onChange={handleChange("character")}
+            value={values.character}
           />
           <Grid container className={classes.icons}>
             <AddToPhotosIcon />
