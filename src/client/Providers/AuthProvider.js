@@ -1,15 +1,28 @@
-class AuthProvider {
-    static provider = new AuthProvider();
+export default class AuthProvider {
+	static provider = new AuthProvider();
 
-    async signIn() {
-        //axios call would go here
-    }
+	constructor() {
+		this.localToken = null;
+	}
 
-    set token() {
-        //set token
-    }
+	logout() {
+		localStorage.removeItem("token");
+	}
 
-    get token() {
-        return this.token;
-    }
+	set token(newToken) {
+		console.log("Setting token");
+		this.localToken = newToken;
+		localStorage.setItem("token", this.localToken);
+		return this.localToken;
+	}
+
+	get token() {
+		if (!this.localToken) {
+			this.localToken = localStorage.getItem("token");
+			if (!this.localToken) {
+				return null;
+			}
+		}
+		return this.localToken;
+	}
 }

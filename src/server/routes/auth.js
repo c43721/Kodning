@@ -11,7 +11,7 @@ router.post("/signin", async (req, res) => {
 		const { error } = validateLogin(req.body);
 		if (error) return res.status(400).json({ error: error.details[0].message });
 
-		let user = await User.findOne({ email: req.body.email });
+		const user = await User.findOne({ email: req.body.email });
 		if (!user) return res.status(400).json({ error: "Invalid email or password." });
 
 		const validPassword = await bcrypt.compare(req.body.password, user.password);
@@ -20,7 +20,10 @@ router.post("/signin", async (req, res) => {
 
 		const token = user.generateAuthToken();
 
-		return res.send(token);
+		return res
+			.header("x-auth-token", token)
+			.header("access-control-expose-headers", "x-auth-token")
+			.json({ token });
 	} catch (ex) {
 		return res.status(500).json({ error: `Internal Server Error: ${ex}` });
 	}
@@ -49,7 +52,7 @@ router.post("/signup", async (req, res) => {
 		return res
 			.header("x-auth-token", token)
 			.header("access-control-expose-headers", "x-auth-token")
-			.json({ _id: user._id, username: user.username, email: user.email });
+			.json({ token });
 	} catch (ex) {
 		return res.status(500).json({ error: `Internal Server Error: ${ex}` });
 	}
@@ -57,7 +60,6 @@ router.post("/signup", async (req, res) => {
 
 router.delete("/delete", checkAuth, async (req, res) => {
 	try {
-		console.log(req.user)
 		await User.findByIdAndDelete(req.user._id);
 
 		res.status(204).json({ message: "Deleted" });
