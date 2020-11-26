@@ -20,6 +20,7 @@ const useStyles = makeStyles(theme => ({
   root: {
     maxWidth: 500,
     borderRadius: "20px",
+    marginBottom: theme.spacing(2),
   },
   media: {
     height: 0,
@@ -41,7 +42,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function FeedCard() {
+export default function Post() {
   const classes = useStyles();
   const [expanded, setExpanded] = useState(false);
 

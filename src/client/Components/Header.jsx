@@ -10,7 +10,6 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import useUser from "../hooks/useUser";
 import { Link } from "@reach/router";
-import AuthProvider from "../Providers/AuthProvider";
 
 const useStyles = makeStyles(theme => ({
 	root: {
@@ -87,13 +86,23 @@ export default function Header() {
 								onClose={handleMenuClose}
 							>
 								<MenuItem>
-									<Link to="/test" className={classes.menuLink}>
+									<Link to="/" className={classes.menuLink}>
+										Home
+									</Link>
+								</MenuItem>
+								<MenuItem>
+									<Link to="/profile" className={classes.menuLink}>
 										View Profile
 									</Link>
 								</MenuItem>
 								<MenuItem>
-									<Link to="/test" className={classes.menuLink}>
+									<Link to="/friends" className={classes.menuLink}>
 										Friends
+									</Link>
+								</MenuItem>
+								<MenuItem>
+									<Link to="/feed" className={classes.menuLink}>
+										Feed
 									</Link>
 								</MenuItem>
 								<MenuItem onClick={() => logoutHandler()}>Logout</MenuItem>
