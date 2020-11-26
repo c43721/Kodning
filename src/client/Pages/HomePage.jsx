@@ -19,8 +19,6 @@ const useStyles = makeStyles(theme => ({
 
 export default function HomePage() {
 	const classes = useStyles();
-	const { user } = useUser();
-  console.log(user);
 	return (
 		<Layout>
 			<Container className={classes.homePage}>

@@ -49,7 +49,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function SignIn() {
 	const classes = useStyles();
-	const { user, setToken } = useUser();
+	const { setToken } = useUser();
 
 	const emailRef = useRef();
 	const passwordRef = useRef();
