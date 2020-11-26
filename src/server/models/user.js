@@ -23,6 +23,9 @@ const userSchema = new mongoose.Schema({
 		maxlength: 1024,
 		minlength: 5
 	},
+	posts: [{
+		type: mongoose.Schema.Types.ObjectId, ref: 'Posts'
+	}],
 });
 
 userSchema.methods.generateAuthToken = function () {
