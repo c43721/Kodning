@@ -3,51 +3,26 @@ import React from "react";
 import Layout from "../Components/Layout";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link as BrowserLink } from "@reach/router";
+import Post from "../Components/Post";
+import PostForm from "../Components/PostForm";
 
-const useStyles = makeStyles(theme => ({
-  homePage: {
-    height: "100%",
-  },
-  actionButtons: {
-    marginTop: "10px",
-  },
-  link: {
-    textDecoration: "none",
-  },
-}));
+const useStyles = makeStyles(theme => ({}));
 
-export default function HomePage() {
+export default function Feed({ onFormSubmit }) {
   const classes = useStyles();
 
   return (
     <Layout>
-      <Container className={classes.homePage}>
+      <Container>
         <Grid
           container
           justify="flex-end"
           alignItems="center"
           direction="column">
-          <Typography variant="h1">Kodning</Typography>
-          <Typography variant="subtitle1">
-            The central place for coders to thrive. Post something to your story
-            to share with all your friends!
-          </Typography>
-          <Grid
-            container
-            justify="center"
-            spacing={3}
-            className={classes.actionButtons}>
-            <Grid item>
-              <BrowserLink to="/test" className={classes.link}>
-                <Button variant="contained">Sign In</Button>
-              </BrowserLink>
-            </Grid>
-            <Grid item>
-              <BrowserLink to="/sign-up" className={classes.link}>
-                <Button variant="contained">Sign Up</Button>
-              </BrowserLink>
-            </Grid>
-          </Grid>
+          <PostForm onFormSubmit={onFormSubmit} />
+          <Post />
+          <Post />
+          <Post />
         </Grid>
       </Container>
     </Layout>

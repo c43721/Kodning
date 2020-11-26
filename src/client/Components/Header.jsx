@@ -8,99 +8,109 @@ import MenuIcon from "@material-ui/icons/Menu";
 import { makeStyles } from "@material-ui/core/styles";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
-
+import useUser from "../hooks/useUser";
 import { Link } from "@reach/router";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  buttonText: {
-    color: "#FFF",
-  },
-  title: {
-    flexGrow: 1,
-  },
-  link: {
-    textDecoration: "none",
-  },
-  menuLink: {
-    textDecoration: "none",
-    color: "#000",
-  },
+const useStyles = makeStyles(theme => ({
+	root: {
+		flexGrow: 1
+	},
+	menuButton: {
+		marginRight: theme.spacing(2)
+	},
+	buttonText: {
+		color: "#FFF"
+	},
+	title: {
+		flexGrow: 1
+	},
+	link: {
+		textDecoration: "none"
+	},
+	menuLink: {
+		textDecoration: "none",
+		color: "#000"
+	}
 }));
 
 export default function Header() {
-  const [anchorEl, setAnchorEl] = useState(null);
+	const [anchorEl, setAnchorEl] = useState(null);
+	const { user, setToken } = useUser();
 
-  const handleMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+	const handleMenuOpen = event => {
+		setAnchorEl(event.currentTarget);
+	};
 
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
+	const handleMenuClose = () => {
+		setAnchorEl(null);
+	};
 
-  const classes = useStyles();
-  const login = false;
+	const logoutHandler = () => {
+		setAnchorEl(null);
+		setToken(null);
+	};
 
-  return (
-    <div className={classes.root}>
-      <AppBar position="static">
-        <Toolbar>
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="menu"
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" className={classes.title}>
-            Kodning
-          </Typography>
-          {login ? (
-            <Link to="/test" className={classes.link}>
-              <Button variant="text" className={classes.buttonText}>
-                Login
-              </Button>
-            </Link>
-          ) : (
-            <>
-              <Button
-                aria-controls="simple-menu"
-                aria-haspopup="true"
-                variant="contained"
-                onClick={handleMenuOpen}
-              >
-                Account
-              </Button>
-              <Menu
-                id="simple-menu"
-                anchorEl={anchorEl}
-                keepMounted
-                open={Boolean(anchorEl)}
-                onClose={handleMenuClose}
-              >
-                <MenuItem>
-                  <Link to="/test" className={classes.menuLink}>
-                    View Profile
-                  </Link>
-                </MenuItem>
-                <MenuItem>
-                  <Link to="/test" className={classes.menuLink}>
-                    Friends
-                  </Link>
-                </MenuItem>
-                <MenuItem>Logout</MenuItem>
-              </Menu>
-            </>
-          )}
-        </Toolbar>
-      </AppBar>
-    </div>
-  );
+	const classes = useStyles();
+
+	return (
+		<div className={classes.root}>
+			<AppBar position="static">
+				<Toolbar>
+					<IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+						<MenuIcon />
+					</IconButton>
+					<Typography variant="h6" className={classes.title}>
+						Kodning
+					</Typography>
+					{!user ? (
+						<Link to="/signin" className={classes.link}>
+							<Button variant="text" className={classes.buttonText}>
+								Login
+							</Button>
+						</Link>
+					) : (
+						<>
+							<Button
+								aria-controls="simple-menu"
+								aria-haspopup="true"
+								variant="contained"
+								onClick={handleMenuOpen}
+							>
+								Account
+							</Button>
+							<Menu
+								id="simple-menu"
+								anchorEl={anchorEl}
+								keepMounted
+								open={Boolean(anchorEl)}
+								onClose={handleMenuClose}
+							>
+								<MenuItem>
+									<Link to="/" className={classes.menuLink}>
+										Home
+									</Link>
+								</MenuItem>
+								<MenuItem>
+									<Link to="/profile" className={classes.menuLink}>
+										View Profile
+									</Link>
+								</MenuItem>
+								<MenuItem>
+									<Link to="/friends" className={classes.menuLink}>
+										Friends
+									</Link>
+								</MenuItem>
+								<MenuItem>
+									<Link to="/feed" className={classes.menuLink}>
+										Feed
+									</Link>
+								</MenuItem>
+								<MenuItem onClick={() => logoutHandler()}>Logout</MenuItem>
+							</Menu>
+						</>
+					)}
+				</Toolbar>
+			</AppBar>
+		</div>
+	);
 }
