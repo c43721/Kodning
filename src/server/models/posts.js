@@ -1,7 +1,5 @@
 const mongoose = require("mongoose");
-const config = require("config");
 const Joi = require("joi");
-const jwt = require("jwtSecret");
 
 const postSchema = new mongoose.Schema({
     user: {
@@ -27,10 +25,6 @@ const postSchema = new mongoose.Schema({
     ]
 });
 
-postSchema.methods.generateAuthToken = function () {
-	return jwt.sign({ _id: this._id, content: this.content }, config.get("jwtSecret"));
-};
-
 const Posts = mongoose.model("Post", postSchema);
 
 function validatePosts(blog) {
@@ -43,5 +37,5 @@ function validatePosts(blog) {
 	return schema.validate(blog);
 }
 
-module.exports.posts = Posts;
+module.exports.Posts = Posts;
 module.exports.validatePosts = validatePosts;
