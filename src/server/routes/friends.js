@@ -3,16 +3,6 @@ const checkAuth = require("../middleware/auth");
 const { User, FriendStatus } = require("../models/user");
 const router = express.Router();
 
-/**
- * Get all friends from a username
- * @param {String} username
- * @returns {Array<Object>} friends
- */
-async function getAcceptedFriendsFromUser(username) {
-	const userModel = await findUserByUsername(username);
-	return userModel.friends.filter(friend => friend.status === FriendStatus.ACCEPTED);
-}
-
 //All routes need to be auth'd
 router.use(checkAuth);
 
@@ -108,4 +98,4 @@ router.post("/delete", async (req, res) => {
 });
 
 module.exports = router;
-module.exports.getAcceptedFriendsFromUser = getAcceptedFriendsFromUser;
+module.exports.getAcceptedFriendsFromId = getAcceptedFriendsFromId;
