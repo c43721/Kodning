@@ -63,8 +63,6 @@ router.post("/", async (req, res) => {
 	const requesterGetRecipiant = requesterFriends.get(recipiant);
 	const recipiantGetRequester = recipiantFriends.get(requester);
 
-	console.log(requesterGetRecipiant, recipiantGetRequester);
-
 	if (
 		requesterGetRecipiant === FriendStatus.ACCEPTED &&
 		recipiantGetRequester === FriendStatus.ACCEPTED
