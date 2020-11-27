@@ -13,12 +13,6 @@ async function getAcceptedFriendsFromUser(username) {
 	return userModel.friends.filter(friend => friend.status === FriendStatus.ACCEPTED);
 }
 
-router.get("/allUsers", async (req, res) => {
-	const users = await User.find();
-
-	res.json(users);
-});
-
 //All routes need to be auth'd
 router.use(checkAuth);
 
