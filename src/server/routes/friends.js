@@ -3,8 +3,49 @@ const checkAuth = require("../middleware/auth");
 const { User, FriendStatus } = require("../models/user");
 const router = express.Router();
 
+async function getAllFriendObjectFromId(idArray) {
+	const results = Promise.all(
+		idArray.map(async id => {
+			const user = await User.findById(id);
+
+			return { username: user.username };
+		})
+	);
+
+	return await results;
+}
+
 //All routes need to be auth'd
 router.use(checkAuth);
+
+router.get("/", async (req, res) => {
+	const user = req.user;
+
+	const userDoc = await User.findById(user._id);
+
+	const friends = [];
+	const pending = [];
+	const requests = [];
+
+	if (!userDoc.friends) return res.status(204).send();
+
+	for (const [key, value] of userDoc.friends) {
+		if (value === FriendStatus.ACCEPTED) friends.push(key);
+		else if (value === FriendStatus.PENDING) pending.push(key);
+		else if (value === FriendStatus.REQUESTED) requests.push(key);
+		else continue;
+	}
+
+	const [friendObjects, pendingObjects, requestObjects] = await Promise.all([
+		getAllFriendObjectFromId(friends),
+		getAllFriendObjectFromId(pending),
+		getAllFriendObjectFromId(requests)
+	]);
+
+	res
+		.status(200)
+		.json({ friends: friendObjects, pending: pendingObjects, requests: requestObjects });
+});
 
 /**
  * Adds a friend
