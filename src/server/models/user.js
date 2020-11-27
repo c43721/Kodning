@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema({
 	},
 	friends: [
 		{
-			user: mongoose.Schema.Types.ObjectId,
+			username: String,
 			status: String
 		}
 	],

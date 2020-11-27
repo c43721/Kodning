@@ -4,16 +4,6 @@ const { User, FriendStatus } = require("../models/user");
 const router = express.Router();
 
 /**
- * Get a user by Username
- * @param {Model<User>} usernameToFind
- */
-async function findUserByUsername(usernameToFind) {
-	return await User.findOne({
-		username: usernameToFind
-	});
-}
-
-/**
  * Get all friends from a username
  * @param {String} username
  * @returns {Array<Object>} friends
@@ -22,6 +12,12 @@ async function getAcceptedFriendsFromUser(username) {
 	const userModel = await findUserByUsername(username);
 	return userModel.friends.filter(friend => friend.status === FriendStatus.ACCEPTED);
 }
+
+router.get("/allUsers", async (req, res) => {
+	const users = await User.find();
+
+	res.json(users);
+});
 
 //All routes need to be auth'd
 router.use(checkAuth);
@@ -32,34 +28,63 @@ router.use(checkAuth);
  * @param {String} recipiant
  */
 router.post("/", async (req, res) => {
-	const requesterName = req.user.username;
-	const { recipiantName } = req.body;
-
-	if (!requesterName || !recipiantName)
-		return res.status(400).json({ error: "No requester or recipiant in body" });
-
-	const [requester, recipiant] = await Promise.all([
-		findUserByUsername(requesterName),
-		findUserByUsername(recipiantName)
-	]);
+	const requester = req.user._id;
+	const { recipiant } = req.body;
 
 	if (!requester || !recipiant)
+		return res.status(400).json({ error: "No requester or recipiant in body" });
+
+	if (requester === recipiant)
+		return res.status(400).json({ error: "You cannot friend yourself!" });
+
+	const [requesterDoc, recipiantDoc] = await Promise.all([
+		User.findById(requester),
+		User.findById(recipiant)
+	]);
+
+	if (!requesterDoc || !recipiantDoc)
 		return res.status(400).json({ error: "Could not find the requested or recipiant in DB." });
 
-	const requesterStatus = requester.friends[recipiantName].status;
-	const recipiantStatus = recipiant.friends[requesterName].status;
+	const [{ friends: requestorFriends }, { friends: recipiantFriends }] = await Promise.all([
+		User.findById(requester).select({ friends: 1 }),
+		User.findById(recipiant).select({ friends: 1 })
+	]);
 
-	if (requesterStatus === FriendStatus.REQUESTED && recipiantStatus === FriendStatus.PENDING) {
-		requesterStatus = FriendStatus.ACCEPTED;
-		recipiantStatus = FriendStatus.ACCEPTED;
-	} else {
-		requesterStatus = FriendStatus.PENDING;
-		recipiantStatus = FriendStatus.REQUESTED;
+	const didRequesterHaveRecipiant = requestorFriends.filter(
+		friend => friend.username === recipiant
+	);
+	const didRecipiantHaveRequestor = recipiantFriends.filter(
+		friend => friend.username === requester
+	);
+
+	if (!didRequesterHaveRecipiant.length && !didRecipiantHaveRequestor.length) {
+		requesterDoc.friends.push({
+			username: recipiant,
+			status: FriendStatus.REQUESTED
+		});
+
+		recipiantDoc.friends.push({
+			username: requester,
+			status: FriendStatus.PENDING
+		});
+
+		await Promise.all([requesterDoc.save(), recipiantDoc.save()]);
 	}
 
-	await Promise.all([requester.save(), recipiant.save()]);
+	// let requesterStatus = requesterModel.friends[requesterIndex].status;
+	// let recipiantStatus = recipiantModel.friends[recipiantIndex].status;
 
-	res.status(200).send({ requester: requesterStatus, recipiant: recipiantStatus });
+	// if (requesterStatus === FriendStatus.PENDING && recipiantStatus === FriendStatus.REQUESTED) {
+	// 	requesterStatus = FriendStatus.ACCEPTED;
+	// 	recipiantStatus = FriendStatus.ACCEPTED;
+	// } else {
+	// 	requesterStatus = FriendStatus.PENDING;
+	// 	recipiantStatus = FriendStatus.REQUESTED;
+	// }
+
+	// await Promise.all([requesterModel.save(), recipiantModel.save()]);
+
+	res.status(200).json({ requestorFriends, recipiantFriends });
 });
 
 /**
@@ -93,4 +118,3 @@ router.post("/delete", async (req, res) => {
 
 module.exports = router;
 module.exports.getAcceptedFriendsFromUser = getAcceptedFriendsFromUser;
-module.exports.findUserByUsername = findUserByUsername;

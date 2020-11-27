@@ -2,7 +2,9 @@ const express = require("express");
 const checkAuth = require("../middleware/auth");
 const router = express.Router();
 
-router.delete("/", checkAuth, async (req, res) => {
+router.use(checkAuth);
+
+router.delete("/", async (req, res) => {
 	try {
 		await User.findByIdAndDelete(req.user._id);
 
@@ -11,3 +13,5 @@ router.delete("/", checkAuth, async (req, res) => {
 		res.status(400).json({ error: "Could not delete" });
 	}
 });
+
+module.exports = router;
