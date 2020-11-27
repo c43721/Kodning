@@ -23,12 +23,11 @@ const userSchema = new mongoose.Schema({
 		maxlength: 1024,
 		minlength: 5
 	},
-	friends: [
-		{
-			username: String,
-			status: String
-		}
-	],
+	friends: {
+		type: Map,
+		of: String,
+		default: {}
+	},
 	posts: [
 		{
 			type: mongoose.Schema.Types.ObjectId,

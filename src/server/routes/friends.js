@@ -45,46 +45,45 @@ router.post("/", async (req, res) => {
 	if (!requesterDoc || !recipiantDoc)
 		return res.status(400).json({ error: "Could not find the requested or recipiant in DB." });
 
-	const [{ friends: requestorFriends }, { friends: recipiantFriends }] = await Promise.all([
+	const [{ friends: requesterFriends }, { friends: recipiantFriends }] = await Promise.all([
 		User.findById(requester).select({ friends: 1 }),
 		User.findById(recipiant).select({ friends: 1 })
 	]);
 
-	const didRequesterHaveRecipiant = requestorFriends.filter(
-		friend => friend.username === recipiant
-	);
-	const didRecipiantHaveRequestor = recipiantFriends.filter(
-		friend => friend.username === requester
-	);
+	const didRequesterHaveRecipiant = requesterFriends.has(recipiant);
+	const didRecipiantHaveRequestor = recipiantFriends.has(requester);
 
-	if (!didRequesterHaveRecipiant.length && !didRecipiantHaveRequestor.length) {
-		requesterDoc.friends.push({
-			username: recipiant,
-			status: FriendStatus.REQUESTED
-		});
-
-		recipiantDoc.friends.push({
-			username: requester,
-			status: FriendStatus.PENDING
-		});
+	if (!didRequesterHaveRecipiant && !didRecipiantHaveRequestor) {
+		requesterDoc.friends.set(recipiant, FriendStatus.REQUESTED);
+		recipiantDoc.friends.set(requester, FriendStatus.PENDING);
 
 		await Promise.all([requesterDoc.save(), recipiantDoc.save()]);
 	}
 
-	// let requesterStatus = requesterModel.friends[requesterIndex].status;
-	// let recipiantStatus = recipiantModel.friends[recipiantIndex].status;
+	const requesterGetRecipiant = requesterFriends.get(recipiant);
+	const recipiantGetRequester = recipiantFriends.get(requester);
 
-	// if (requesterStatus === FriendStatus.PENDING && recipiantStatus === FriendStatus.REQUESTED) {
-	// 	requesterStatus = FriendStatus.ACCEPTED;
-	// 	recipiantStatus = FriendStatus.ACCEPTED;
-	// } else {
-	// 	requesterStatus = FriendStatus.PENDING;
-	// 	recipiantStatus = FriendStatus.REQUESTED;
-	// }
+	console.log(requesterGetRecipiant, recipiantGetRequester);
 
-	// await Promise.all([requesterModel.save(), recipiantModel.save()]);
+	if (
+		requesterGetRecipiant === FriendStatus.ACCEPTED &&
+		recipiantGetRequester === FriendStatus.ACCEPTED
+	)
+		return res.status(400).json({ error: "You're already friends!" });
 
-	res.status(200).json({ requestorFriends, recipiantFriends });
+	if (requesterGetRecipiant === FriendStatus.PENDING)
+		return res.status(400).json({ error: "You already sent a Friend Request!" });
+
+	if (
+		requesterGetRecipiant === FriendStatus.REQUESTED &&
+		recipiantGetRequester === FriendStatus.PENDING
+	) {
+		requesterDoc.friends.set(recipiant, FriendStatus.ACCEPTED);
+		recipiantDoc.friends.set(requester, FriendStatus.ACCEPTED);
+		await Promise.all([requesterDoc.save(), recipiantDoc.save()]);
+	}
+
+	res.status(200).json({ requesterDoc, recipiantDoc });
 });
 
 /**
