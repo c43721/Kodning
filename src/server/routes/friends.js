@@ -3,6 +3,12 @@ const checkAuth = require("../middleware/auth");
 const { User, FriendStatus } = require("../models/user");
 const router = express.Router();
 
+/**
+ * Gets all friend objects from an array of IDs
+ * @param {Array<String>} idArray 
+ * @returns {Array<Object>} username
+ * @async
+ */
 async function getAllFriendObjectFromId(idArray) {
 	const results = Promise.all(
 		idArray.map(async id => {
@@ -47,11 +53,6 @@ router.get("/", async (req, res) => {
 		.json({ friends: friendObjects, pending: pendingObjects, requests: requestObjects });
 });
 
-/**
- * Adds a friend
- * @param {String} requester
- * @param {String} recipiant
- */
 router.post("/", async (req, res) => {
 	const requester = req.user._id;
 	const { recipiant } = req.body;
@@ -101,11 +102,6 @@ router.post("/", async (req, res) => {
 	res.status(200).json({ requesterDoc, recipiantDoc });
 });
 
-/**
- * Deletes a friend from both requester and recipiant
- * @param {String} requester
- * @param {String} recipiant
- */
 router.post("/delete", async (req, res) => {
 	const requester = req.user._id;
 	const { recipiant } = req.body;
@@ -127,16 +123,13 @@ router.post("/delete", async (req, res) => {
 	const requesterGetRecipiant = requesterDoc.friends.get(recipiant);
 	const recipiantGetRequester = recipiantDoc.friends.get(requester);
 
-	if (
-		requesterGetRecipiant !== FriendStatus.ACCEPTED &&
-		recipiantGetRequester !== FriendStatus.ACCEPTED
-	) {
-		return res.status(403).json({ error: "You cannot remove someone who isn't your friend" });
-	} else {
+	if (requesterGetRecipiant && recipiantGetRequester) {
 		requesterDoc.friends.delete(recipiant);
 		recipiantDoc.friends.delete(requester);
 		await Promise.all([requesterDoc.save(), recipiantDoc.save()]);
-		res.status(204).send();
+		return res.status(200).json({ message: "Friend deleted" });
+	} else {
+		return res.status(403).json({ error: "Either no request was sent or you are not friends with that user" });
 	}
 });
 
