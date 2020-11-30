@@ -61,7 +61,6 @@ export default function Post() {
         // title={user}
         // subheader={date}
       />
-      <CardMedia className={classes.media} image="" />
       <CardContent>
         <Typography variant="body2" color="textSecondary" component="p">
           blog post
