@@ -7,7 +7,7 @@ import PostForm from "../Components/PostForm";
 
 const useStyles = makeStyles(theme => ({}));
 
-export default function Feed({ onFormSubmit }) {
+export default function Feed() {
   const classes = useStyles();
 
   return (
