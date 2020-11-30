@@ -5,7 +5,7 @@ const router = express.Router();
 
 /**
  * Gets all friend objects from an array of IDs
- * @param {Array<String>} idArray 
+ * @param {Array<String>} idArray
  * @returns {Array<Object>} username
  * @async
  */
@@ -21,19 +21,19 @@ async function getAllFriendObjectFromId(idArray) {
 	return await results;
 }
 
-//All routes need to be auth'd
-router.use(checkAuth);
-
-router.get("/", async (req, res) => {
-	const user = req.user;
-
-	const userDoc = await User.findById(user._id);
+/**
+ * Get the friends, friend requests, and pending requests from a user's _id
+ * @param {ObjectId} userId The user's _id
+ * @returns Object with friends, pending, and requests that are type of Array<String>
+ */
+async function getFriendsFromUser(userId) {
+	const userDoc = await User.findById(userId);
 
 	const friends = [];
 	const pending = [];
 	const requests = [];
 
-	if (!userDoc.friends) return res.status(204).send();
+	if (!userDoc.friends) return { friends: [], pending: [], requests: [] };
 
 	for (const [key, value] of userDoc.friends) {
 		if (value === FriendStatus.ACCEPTED) friends.push(key);
@@ -41,6 +41,17 @@ router.get("/", async (req, res) => {
 		else if (value === FriendStatus.REQUESTED) requests.push(key);
 		else continue;
 	}
+
+	return { friends, pending, requests };
+}
+
+//All routes need to be auth'd
+router.use(checkAuth);
+
+router.get("/", async (req, res) => {
+	const user = req.user;
+
+	const { friends, pending, requests } = await getFriendsFromUser(user._id);
 
 	const [friendObjects, pendingObjects, requestObjects] = await Promise.all([
 		getAllFriendObjectFromId(friends),
@@ -129,8 +140,11 @@ router.post("/delete", async (req, res) => {
 		await Promise.all([requesterDoc.save(), recipiantDoc.save()]);
 		return res.status(200).json({ message: "Friend deleted" });
 	} else {
-		return res.status(403).json({ error: "Either no request was sent or you are not friends with that user" });
+		return res
+			.status(403)
+			.json({ error: "Either no request was sent or you are not friends with that user" });
 	}
 });
 
 module.exports = router;
+module.exports.getFriendsFromUser = getFriendsFromUser;
