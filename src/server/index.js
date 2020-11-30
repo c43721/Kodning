@@ -20,7 +20,7 @@ try {
 
 //ROUTES
 const AuthRoute = require("./routes/auth");
-const PostRoute = require("./routes/posts");
+const PostRoute = require("./routes/post");
 
 app.use(express.static("dist"));
 app.use(express.json());
@@ -28,9 +28,6 @@ app.use(cors());
 
 app.use("/api/auth", AuthRoute);
 app.use("/api/posts", PostRoute);
-app.use("/api/posts/likes/:id", PostRoute);
-app.use("/api/posts/:post_id", PostRoute);
-
 
 
 app.all("*", (req, res) => {
