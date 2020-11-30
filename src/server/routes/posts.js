@@ -11,7 +11,7 @@ router.get("/", async (res) => {
         res.json(posts);
     } catch (error) {
         console.error(error);
-        return res.status(500).json("Server Error...");
+        return res.status(500).json({ error: "Server Error..." });
     }
 });
 
@@ -22,7 +22,7 @@ router.post("/", async (req, res) => {
         return res.status(400).json({ errors: errors.array() });
     try {
         let user = await User.findById(req.user.id).select("-password");
-        if (!user) return res.status(404).json("User not found");
+        if (!user) return res.status(404).json({ error: "User not found" });
 
         let newPost = new Posts({
             content,
@@ -31,8 +31,14 @@ router.post("/", async (req, res) => {
         });
 
         await newPost.save();
+        const token = posts.generateAuthToken();
 
-        res.json({ message: "New post created!" });
+        return res
+        .header("x-auth-token", token)
+        .header("access-control-expose-headers", "x-auth-token")
+        .json({ message: "New post created!" });
+
+        // res.json({ message: "New post created!" });
     } catch (error) {
         console.error(error);
         return res.status(500).json("Server Error...");
@@ -46,7 +52,7 @@ router.put("/likes/:id", async (req, res) => {
         if (!post) return res.status(404).json("Post not found");
 
         if (post.likes.find((like) => like.user.toString() === req.user.id))
-            return res.status(401).json("You already liked this post!");
+            return res.status(401).json({ error: "You already liked this post!" });
 
         let newLike = {
             user: req.user.id,
@@ -59,7 +65,7 @@ router.put("/likes/:id", async (req, res) => {
         res.json(post);
     } catch (error) {
         console.error(error);
-        return res.status(500).json("Server Error...");
+        return res.status(500).json({ error: "Server Error..." });
     }
 });
 
@@ -67,17 +73,17 @@ router.delete("/:post_id", async (req, res) => {
     try {
         let post = await Post.findById(req.params.post_id);
 
-        if (!post) return res.status(404).json("Not found");
+        if (!post) return res.status(404).json({ error: "Not found" });
 
         if (post.user.toString() !== req.user.id.toString())
-            return res.status(401).json("Unauthorized!");
+            return res.status(401).json({ error: "Unauthorized!" });
 
         await post.remove();
 
-        res.json("Post has been removed!");
+        res.json({ meessage: "Post has been removed!" });
     } catch (error) {
         console.error(error);
-        return res.status(500).json("Server Error...");
+        return res.status(500).json({ error: "Server Error..." });
     }
 });
 
@@ -97,14 +103,17 @@ router.get("/:user_id", async (req, res) => {
         res.json(posts);
     } catch (error) {
         console.error(error);
-        return res.status(500).json("Server Error...");
+        return res.status(500).json({ error: "Server Error..." });
     }
 });
 
-function getPosts(user) {
-    // get user from DB (User.findById)
-    // get posts 
-    // return posts
-}
+// async function getPosts(allUsers) {
+//     let theUsers = await Post.find({ user: req.params.user_id });
+//     const allPosts = await Post.find().sort({ date: -1 });
+//     return allPosts;
+// };
+
+
+// getPosts();
 
 module.exports = router;

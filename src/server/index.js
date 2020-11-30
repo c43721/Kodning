@@ -28,6 +28,10 @@ app.use(cors());
 
 app.use("/api/auth", AuthRoute);
 app.use("/api/posts", PostRoute);
+app.use("/api/posts/likes/:id", PostRoute);
+app.use("/api/posts/:post_id", PostRoute);
+
+
 
 app.all("*", (req, res) => {
 	res.status(404).send(`Cannot find ${req.method} method for route ${req.path}`);
