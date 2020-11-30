@@ -8,3 +8,5 @@ default.json
 config/default.json
 
 .DS_Store
+
+config/default.json
