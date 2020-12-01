@@ -64,10 +64,6 @@ router.get("/", async (req, res) => {
 		.json({ friends: friendObjects, pending: pendingObjects, requests: requestObjects });
 });
 
-// setFriends(data) -> { friends: [{username: "12345"}], pending: []], requests: [] }
-// friends.map(friend => ) NO NO!
-// friends.friends.map(friend => <><Friend {...friend} /></>) NO NO! component: props.username
-
 router.post("/", async (req, res) => {
 	const requester = req.user._id;
 	const { recipiant } = req.body;
