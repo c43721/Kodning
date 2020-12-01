@@ -64,6 +64,55 @@ router.get("/", async (req, res) => {
 		.json({ friends: friendObjects, pending: pendingObjects, requests: requestObjects });
 });
 
+router.post("/username", async (req, res) => {
+	const requester = req.user._id;
+	const { recipiant } = req.body;
+
+	if (!requester || !recipiant)
+		return res.status(400).json({ error: "No requester or recipiant in body" });
+
+	if (requester === recipiant)
+		return res.status(400).json({ error: "You cannot friend yourself!" });
+
+	const [requesterDoc, recipiantDoc] = await Promise.all([
+		User.findById(requester),
+		User.find({ username: recipiant })
+	]);
+
+	if (!requesterDoc || !recipiantDoc)
+		return res.status(400).json({ error: "Could not find the requested or recipiant in DB" });
+
+	const didRequesterHaveRecipiant = requesterDoc.friends.has(recipiant);
+	const didRecipiantHaveRequestor = recipiantDoc.friends.has(requester);
+
+	if (!didRequesterHaveRecipiant && !didRecipiantHaveRequestor) {
+		requesterDoc.friends.set(recipiant, FriendStatus.REQUESTED);
+		recipiantDoc.friends.set(requester, FriendStatus.PENDING);
+
+		await Promise.all([requesterDoc.save(), recipiantDoc.save()]);
+	}
+
+	const requesterGetRecipiant = requesterDoc.friends.get(recipiant);
+	const recipiantGetRequester = recipiantDoc.friends.get(requester);
+
+	if (
+		requesterGetRecipiant === FriendStatus.ACCEPTED &&
+		recipiantGetRequester === FriendStatus.ACCEPTED
+	)
+		return res.status(400).json({ error: "You're already friends!" });
+
+	if (
+		requesterGetRecipiant === FriendStatus.PENDING &&
+		recipiantGetRequester === FriendStatus.REQUESTED
+	) {
+		requesterDoc.friends.set(recipiant, FriendStatus.ACCEPTED);
+		recipiantDoc.friends.set(requester, FriendStatus.ACCEPTED);
+		await Promise.all([requesterDoc.save(), recipiantDoc.save()]);
+	}
+
+	res.status(200).json({ requesterDoc, recipiantDoc });
+});
+
 router.post("/", async (req, res) => {
 	const requester = req.user._id;
 	const { recipiant } = req.body;
