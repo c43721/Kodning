@@ -1,11 +1,11 @@
 import React from "react";
 import { Router } from "@reach/router";
 import HomePage from "./Pages/HomePage";
-import TestPage from "./Pages/TestPage";
 import SignUpPage from "./Pages/SignUpPage";
 import Feed from "./Pages/Feed";
 import SignInPage from "./Pages/SignInPage";
 import FriendsPage from "./pages/FriendsPage";
+import ProfilePage from "./Pages/ProfilePage";
 import { UserProvider } from "./hooks/useUser";
 
 export default function App() {
@@ -13,7 +13,7 @@ export default function App() {
     <UserProvider>
       <Router>
         <HomePage path="/" />
-        <TestPage path="/test" />
+        <ProfilePage path="/profile" />
         <SignUpPage path="/sign-up" />
         <Feed path="/feed" />
         <SignInPage path="/signin" />
