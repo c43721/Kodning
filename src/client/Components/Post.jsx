@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
@@ -38,8 +38,12 @@ const useStyles = makeStyles(theme => ({
 
 export default function Post() {
   const classes = useStyles();
-  const [post, setPost] = useState([]);
   const [like, setLike] = useState(0);
+  // const { user, setToken } = useUser();
+
+  // useEffect(() => {
+  //   console.log("render");
+  // }, [like]);
 
   const likeButton = e => {
     e.preventDefault();
@@ -61,6 +65,7 @@ export default function Post() {
         // title={user}
         // subheader={date}
       />
+      <CardMedia className={classes.media} image="" />
       <CardContent>
         <Typography variant="body2" color="textSecondary" component="p">
           blog post
