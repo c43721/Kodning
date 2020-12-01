@@ -8,6 +8,7 @@ import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import axios from "axios";
+import useUser from "../hooks/useUser";
 const useStyles = makeStyles({
   root: {
     minWidth: 275,
@@ -25,60 +26,48 @@ const useStyles = makeStyles({
   },
 });
 
-export default function FriendsPage(props) {
+export default function FriendsPage() {
   const [friends, setFriends] = useState();
   const [refreshFriends, setRefreshFriends] = useState(true);
   const usernameRef = useRef();
-  console.log(friends);
+  const { token } = useUser();
 
   function deleteFriend(user) {
     axios
       .post("/api/friends/delete", {
         recipiant: user,
-      })
+      }, { headers: { "x-auth-token": token } })
       .then(function ({ data }) {
         setRefreshFriends(!refreshFriends);
       })
-      .catch(function (error) {
-        console.log(error);
-      });
   }
 
   function addFriend(user) {
     axios
       .post("/api/friends", {
         recipiant: user,
-      })
+      }, { headers: { "x-auth-token": token } })
       .then(function ({ data }) {
         setRefreshFriends(!refreshFriends);
       })
-      .catch(function (error) {
-        console.log(error);
-      });
   }
 
-  function addFriendByUsername(user) {
+  function addFriendByUsername(userToSearch) {
     axios
       .post("/api/friends/username", {
-        recipiant: user,
-      })
+        recipiant: userToSearch,
+      }, { headers: { "x-auth-token": token } })
       .then(function ({ data }) {
         setRefreshFriends(!refreshFriends);
       })
-      .catch(function (error) {
-        console.log(error);
-      });
   }
 
   useEffect(() => {
     axios
-      .get("/api/friends")
+      .get("/api/friends", { headers: { "x-auth-token": token } })
       .then(function ({ data }) {
         setFriends(data);
       })
-      .catch(function (error) {
-        console.log(error);
-      });
   }, [refreshFriends]);
 
   return (
@@ -101,7 +90,7 @@ export default function FriendsPage(props) {
                 {...friend}
               />
             ))}
-            {friends.requests.map((friend) => (
+            {friends.pending.map((friend) => (
               <Requests
                 key={friend._id}
                 deleteFriend={deleteFriend}
@@ -149,7 +138,6 @@ function Friend(props) {
 
 function Requests(props) {
   const classes = useStyles();
-  console.log(props);
   return (
     <Grid item>
       <Card className={classes.root}>

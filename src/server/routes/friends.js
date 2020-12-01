@@ -31,18 +31,16 @@ async function getFriendsFromUser(userId) {
 
 	const friends = [];
 	const pending = [];
-	const requests = [];
 
-	if (!userDoc.friends) return { friends: [], pending: [], requests: [] };
+	if (!userDoc.friends) return { friends: [], pending: [] };
 
 	for (const [key, value] of userDoc.friends) {
 		if (value === FriendStatus.ACCEPTED) friends.push(key);
 		else if (value === FriendStatus.PENDING) pending.push(key);
-		else if (value === FriendStatus.REQUESTED) requests.push(key);
 		else continue;
 	}
 
-	return { friends, pending, requests };
+	return { friends, pending };
 }
 
 //All routes need to be auth'd
@@ -51,17 +49,14 @@ router.use(checkAuth);
 router.get("/", async (req, res) => {
 	const user = req.user;
 
-	const { friends, pending, requests } = await getFriendsFromUser(user._id);
+	const { friends, pending } = await getFriendsFromUser(user._id);
 
-	const [friendObjects, pendingObjects, requestObjects] = await Promise.all([
+	const [friendObjects, pendingObjects] = await Promise.all([
 		getAllFriendObjectFromId(friends),
-		getAllFriendObjectFromId(pending),
-		getAllFriendObjectFromId(requests)
+		getAllFriendObjectFromId(pending)
 	]);
 
-	res
-		.status(200)
-		.json({ friends: friendObjects, pending: pendingObjects, requests: requestObjects });
+	res.status(200).json({ friends: friendObjects, pending: pendingObjects });
 });
 
 router.post("/username", async (req, res) => {
@@ -71,28 +66,28 @@ router.post("/username", async (req, res) => {
 	if (!requester || !recipiant)
 		return res.status(400).json({ error: "No requester or recipiant in body" });
 
-	if (requester === recipiant)
-		return res.status(400).json({ error: "You cannot friend yourself!" });
-
 	const [requesterDoc, recipiantDoc] = await Promise.all([
 		User.findById(requester),
-		User.find({ username: recipiant })
+		User.findOne({ username: recipiant })
 	]);
+
+	if (requester === recipiantDoc._id.toString())
+		return res.status(400).json({ error: "You cannot friend yourself!" });
 
 	if (!requesterDoc || !recipiantDoc)
 		return res.status(400).json({ error: "Could not find the requested or recipiant in DB" });
 
-	const didRequesterHaveRecipiant = requesterDoc.friends.has(recipiant);
+	const didRequesterHaveRecipiant = requesterDoc.friends.has(recipiantDoc._id.toString());
 	const didRecipiantHaveRequestor = recipiantDoc.friends.has(requester);
 
 	if (!didRequesterHaveRecipiant && !didRecipiantHaveRequestor) {
-		requesterDoc.friends.set(recipiant, FriendStatus.REQUESTED);
+		requesterDoc.friends.set(recipiantDoc._id.toString(), FriendStatus.REQUESTED);
 		recipiantDoc.friends.set(requester, FriendStatus.PENDING);
 
 		await Promise.all([requesterDoc.save(), recipiantDoc.save()]);
 	}
 
-	const requesterGetRecipiant = requesterDoc.friends.get(recipiant);
+	const requesterGetRecipiant = requesterDoc.friends.get(recipiantDoc._id.toString());
 	const recipiantGetRequester = recipiantDoc.friends.get(requester);
 
 	if (
@@ -105,12 +100,12 @@ router.post("/username", async (req, res) => {
 		requesterGetRecipiant === FriendStatus.PENDING &&
 		recipiantGetRequester === FriendStatus.REQUESTED
 	) {
-		requesterDoc.friends.set(recipiant, FriendStatus.ACCEPTED);
+		requesterDoc.friends.set(recipiantDoc._id.toString(), FriendStatus.ACCEPTED);
 		recipiantDoc.friends.set(requester, FriendStatus.ACCEPTED);
 		await Promise.all([requesterDoc.save(), recipiantDoc.save()]);
 	}
 
-	res.status(200).json({ requesterDoc, recipiantDoc });
+	res.status(204).send();
 });
 
 router.post("/", async (req, res) => {
@@ -151,15 +146,15 @@ router.post("/", async (req, res) => {
 		return res.status(400).json({ error: "You're already friends!" });
 
 	if (
-		requesterGetRecipiant === FriendStatus.PENDING &&
-		recipiantGetRequester === FriendStatus.REQUESTED
+		requesterGetRecipiant === FriendStatus.REQUESTED &&
+		recipiantGetRequester === FriendStatus.PENDING
 	) {
 		requesterDoc.friends.set(recipiant, FriendStatus.ACCEPTED);
 		recipiantDoc.friends.set(requester, FriendStatus.ACCEPTED);
 		await Promise.all([requesterDoc.save(), recipiantDoc.save()]);
 	}
 
-	res.status(200).json({ requesterDoc, recipiantDoc });
+	res.status(204).send();
 });
 
 router.post("/delete", async (req, res) => {
