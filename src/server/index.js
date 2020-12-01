@@ -33,6 +33,7 @@ app.use("/api/posts", PostRoute);
 app.use("/api/friends", FriendRoute);
 app.use("/api/users", UserRoute);
 
+
 app.all("*", (req, res) => {
 	res.status(404).send(`Cannot find ${req.method} method for route ${req.path}`);
 });

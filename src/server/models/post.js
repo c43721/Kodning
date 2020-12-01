@@ -25,7 +25,8 @@ const postSchema = new mongoose.Schema({
     ]
 });
 
-const Posts = mongoose.model("Post", postSchema);
+
+const Post = mongoose.model("Post", postSchema);
 
 function validatePosts(blog) {
 	const schema = Joi.object({
@@ -37,5 +38,5 @@ function validatePosts(blog) {
 	return schema.validate(blog);
 }
 
-module.exports.Posts = Posts;
+module.exports.Post = Post;
 module.exports.validatePosts = validatePosts;
