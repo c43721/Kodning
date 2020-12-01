@@ -146,8 +146,8 @@ router.post("/", async (req, res) => {
 		return res.status(400).json({ error: "You're already friends!" });
 
 	if (
-		requesterGetRecipiant === FriendStatus.REQUESTED &&
-		recipiantGetRequester === FriendStatus.PENDING
+		requesterGetRecipiant === FriendStatus.PENDING &&
+		recipiantGetRequester === FriendStatus.REQUESTED
 	) {
 		requesterDoc.friends.set(recipiant, FriendStatus.ACCEPTED);
 		recipiantDoc.friends.set(requester, FriendStatus.ACCEPTED);
