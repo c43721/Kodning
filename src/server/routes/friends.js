@@ -14,7 +14,7 @@ async function getAllFriendObjectFromId(idArray) {
 		idArray.map(async id => {
 			const user = await User.findById(id);
 
-			return { username: user.username };
+			return { username: user.username, _id: user._id, avatar: user.avatar || "N" };
 		})
 	);
 
@@ -63,6 +63,10 @@ router.get("/", async (req, res) => {
 		.status(200)
 		.json({ friends: friendObjects, pending: pendingObjects, requests: requestObjects });
 });
+
+// setFriends(data) -> { friends: [{username: "12345"}], pending: []], requests: [] }
+// friends.map(friend => ) NO NO!
+// friends.friends.map(friend => <><Friend {...friend} /></>) NO NO! component: props.username
 
 router.post("/", async (req, res) => {
 	const requester = req.user._id;
