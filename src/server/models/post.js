@@ -25,10 +25,7 @@ const Post = mongoose.model("Post", postSchema);
 
 function validatePosts(blog) {
 	const schema = Joi.object({
-		user: Joi.type().ref(),
 		content: Joi.string().maxlength(140).required(),
-		date: Joi.date(),
-		likes: Joi.user()
 	});
 	return schema.validate(blog);
 }

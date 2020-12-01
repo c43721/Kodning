@@ -32,23 +32,18 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-	let { content } = req.body;
-	const errors = validatePosts(req);
-	if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+	const { content } = req.body;
+	const { error: er } = validatePosts(content);
+	if (er) return res.status(400).json({ error: er });
 	try {
-		const user = await User.findById(req.user._id);
-		if (!user) return res.status(404).json({ error: "User not found" });
-
-		let newPost = new Post({
+		const newPost = new Post({
 			content,
-			name: user.username
+			name: req.user.username
 		});
 
 		await newPost.save();
 
-		return res.json({ message: "New post created!" });
-
-		// res.json({ message: "New post created!" });
+		return res.json({ post: newPost });
 	} catch (error) {
 		console.error(error);
 		return res.status(500).json("Server Error...");
