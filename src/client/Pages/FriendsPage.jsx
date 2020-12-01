@@ -69,14 +69,13 @@ function Friend(props) {
         <Typography variant="body2" component="p">
           even more stuff
           <br />
-          {'"something needs to go here whenm styling "'}
+          {'"something needs to go here whenm styling"'}
         </Typography>
       </CardContent>
       <CardActions>
         <Button size="small">cancel friend</Button>
       </CardActions>
-	  
-	  </Card>
-    </Grid>
+	</Card>
+</Grid>
   );
 }
