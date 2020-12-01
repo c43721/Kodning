@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Layout from "../Components/Layout";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
@@ -30,17 +30,17 @@ export default function FriendsPage(props) {
   const [refreshFriends, setRefreshFriends] = useState(true);
   console.log(friends);
 
-  function deleteFriend(user){
-    axios.post('/api/friends/delete', {
-     recipiant: user
-    })
-    .then(function ({ data }) {
-      setRefreshFriends(!refreshFriends);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-
+  function deleteFriend(user) {
+    axios
+      .post("/api/friends/delete", {
+        recipiant: user,
+      })
+      .then(function ({ data }) {
+        setRefreshFriends(!refreshFriends);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   }
 
   useEffect(() => {
@@ -60,7 +60,7 @@ export default function FriendsPage(props) {
         {friends ? (
           <>
             {friends.friends.map((friend) => (
-              <Friend key={friend.id} {...friend} />
+              <Friend key={friend._id} {...friend} />
             ))}
           </>
         ) : (
@@ -83,25 +83,19 @@ function Friend(props) {
             color="textSecondary"
             gutterBottom
           >
-            {props.name}
-          </Typography>
-          <Typography variant="h5" component="h2">
-            stuff
-          </Typography>
-          <Typography className={classes.pos} color="textSecondary">
-            other stuff
+            {props.username}
           </Typography>
           <Typography variant="body2" component="p">
-            even more stuff
             <br />
-            {'"something needs to go here whenm styling"'}
           </Typography>
         </CardContent>
         <CardActions>
-          <Button size="small">cancel friend</Button>
+          <Button size="small" onClick={() => deleteFriend(props._id)}>
+            {" "}
+            Cancel Friend{" "}
+          </Button>
         </CardActions>
       </Card>
     </Grid>
   );
-
 }
