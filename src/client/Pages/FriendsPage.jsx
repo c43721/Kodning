@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Layout from "../Components/Layout";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
@@ -28,6 +28,7 @@ const useStyles = makeStyles({
 export default function FriendsPage(props) {
   const [friends, setFriends] = useState();
   const [refreshFriends, setRefreshFriends] = useState(true);
+  const usernameRef = useRef();
   console.log(friends);
 
   function deleteFriend(user) {
@@ -56,6 +57,19 @@ export default function FriendsPage(props) {
       });
   }
 
+  function addFriendByUsername(user) {
+    axios
+      .post("/api/friends/username", {
+        recipiant: user,
+      })
+      .then(function ({ data }) {
+        setRefreshFriends(!refreshFriends);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
   useEffect(() => {
     axios
       .get("/api/friends")
@@ -70,6 +84,14 @@ export default function FriendsPage(props) {
   return (
     <Layout>
       <Grid container>
+        <Grid item>
+          <input ref={usernameRef}>Search Friend</input>
+          <button
+            onClick={() => addFriendByUsername(usernameRef.current.value)}
+          >
+            Add Friend By Username
+          </button>
+        </Grid>
         {friends ? (
           <>
             {friends.friends.map((friend) => (
