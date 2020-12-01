@@ -9,6 +9,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Link as BrowserLink, navigate } from "@reach/router";
 import Logo from "../Image/KODNING_LOGO.png";
 import axios from "axios";
+import useUser from "../hooks/useUser";
 
 function Copyright() {
 	return (
