@@ -23,13 +23,21 @@ const userSchema = new mongoose.Schema({
 		maxlength: 1024,
 		minlength: 5
 	},
-	posts: [{
-		type: mongoose.Schema.Types.ObjectId, ref: 'Posts'
-	}],
+	friends: {
+		type: Map,
+		of: String,
+		default: {}
+	},
+	posts: [
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "Posts"
+		}
+	]
 });
 
 userSchema.methods.generateAuthToken = function () {
-	return jwt.sign({ _id: this._id, username: this.username }, config.get("jwtSecret"));
+	return jwt.sign({ _id: this._id, username: this.username, email: this.email }, config.get("jwtSecret"));
 };
 
 const User = mongoose.model("User", userSchema);
@@ -43,5 +51,12 @@ function validateUser(user) {
 	return schema.validate(user);
 }
 
-module.exports.User = User;
+const FriendStatus = Object.freeze({
+	REQUESTED: "Requested",
+	PENDING: "Pending",
+	ACCEPTED: "Accepted"
+});
+
+module.exports.FriendStatus = FriendStatus;
 module.exports.validateUser = validateUser;
+module.exports.User = User;

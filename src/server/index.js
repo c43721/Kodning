@@ -20,7 +20,9 @@ try {
 
 //ROUTES
 const AuthRoute = require("./routes/auth");
-const PostRoute = require("./routes/post");
+const PostRoute = require("./routes/posts");
+const FriendRoute = require("./routes/friends");
+const UserRoute = require("./routes/user");
 
 app.use(express.static("dist"));
 app.use(express.json());
@@ -28,6 +30,8 @@ app.use(cors());
 
 app.use("/api/auth", AuthRoute);
 app.use("/api/posts", PostRoute);
+app.use("/api/friends", FriendRoute);
+app.use("/api/users", UserRoute);
 
 
 app.all("*", (req, res) => {
