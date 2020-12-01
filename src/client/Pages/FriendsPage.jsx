@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Layout from "../Components/Layout";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
@@ -7,7 +7,7 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
-
+import axios from "axios";
 const useStyles = makeStyles({
   root: {
     minWidth: 275,
@@ -43,6 +43,19 @@ export default function FriendsPage(props) {
       });
   }
 
+  function addFriend(user) {
+    axios
+      .post("/api/friends", {
+        recipiant: user,
+      })
+      .then(function ({ data }) {
+        setRefreshFriends(!refreshFriends);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
   useEffect(() => {
     axios
       .get("/api/friends")
@@ -60,7 +73,19 @@ export default function FriendsPage(props) {
         {friends ? (
           <>
             {friends.friends.map((friend) => (
-              <Friend key={friend._id} {...friend} />
+              <Friend
+                key={friend._id}
+                deleteFriend={deleteFriend}
+                {...friend}
+              />
+            ))}
+            {friends.requests.map((friend) => (
+              <Requests
+                key={friend._id}
+                deleteFriend={deleteFriend}
+                addFriend={addFriend}
+                {...friend}
+              />
             ))}
           </>
         ) : (
@@ -90,9 +115,41 @@ function Friend(props) {
           </Typography>
         </CardContent>
         <CardActions>
-          <Button size="small" onClick={() => deleteFriend(props._id)}>
+          <Button size="small" onClick={() => props.deleteFriend(props._id)}>
             {" "}
             Cancel Friend{" "}
+          </Button>
+        </CardActions>
+      </Card>
+    </Grid>
+  );
+}
+
+function Requests(props) {
+  const classes = useStyles();
+  console.log(props);
+  return (
+    <Grid item>
+      <Card className={classes.root}>
+        <CardContent>
+          <Typography
+            className={classes.title}
+            color="textSecondary"
+            gutterBottom
+          >
+            {props.username}
+          </Typography>
+          <Typography variant="body2" component="p">
+            <br />
+          </Typography>
+        </CardContent>
+        <CardActions>
+          <Button size="small" onClick={() => props.deleteFriend(props._id)}>
+            Cancel Friend{" "}
+          </Button>
+          <Button size="small" onClick={() => props.addFriend(props._id)}>
+            {" "}
+            Accept Friend{" "}
           </Button>
         </CardActions>
       </Card>
