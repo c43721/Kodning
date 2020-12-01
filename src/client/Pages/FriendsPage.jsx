@@ -85,7 +85,7 @@ export default function FriendsPage(props) {
     <Layout>
       <Grid container>
         <Grid item>
-          <input ref={usernameRef}>Search Friend</input>
+          <input ref={usernameRef} placeholder="Add friend" />
           <button
             onClick={() => addFriendByUsername(usernameRef.current.value)}
           >
