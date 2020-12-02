@@ -10,6 +10,7 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import useUser from "../hooks/useUser";
 import { Link } from "@reach/router";
+import Logo from "../Image/KODNING_LOGO.png";
 
 const useStyles = makeStyles(theme => ({
 	root: {
@@ -60,7 +61,7 @@ export default function Header() {
 						<MenuIcon />
 					</IconButton>
 					<Typography variant="h6" className={classes.title}>
-						Kodning
+					<img src={Logo} className={classes.logo} />
 					</Typography>
 					{!user ? (
 						<Link to="/signin" className={classes.link}>

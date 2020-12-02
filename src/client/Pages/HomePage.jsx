@@ -4,6 +4,7 @@ import Layout from "../Components/Layout";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link as BrowserLink } from "@reach/router";
 import useUser from "../hooks/useUser";
+import Logo from "../Image/KODNING_LOGO.png";
 
 const useStyles = makeStyles(theme => ({
 	homePage: {
@@ -23,7 +24,7 @@ export default function HomePage() {
 		<Layout>
 			<Container className={classes.homePage}>
 				<Grid container justify="flex-end" alignItems="center" direction="column">
-					<Typography variant="h1">Kodning</Typography>
+					<Typography variant="h1"> <img src={Logo} className={classes.logo} /> </Typography>
 					<Typography variant="subtitle1">
 						The central place for coders to thrive. Post something to your story to share with all
 						your friends!
