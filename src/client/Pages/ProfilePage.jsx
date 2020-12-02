@@ -7,7 +7,7 @@ import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import useUser from "../hooks/useUser";
 import { navigate } from "@reach/router";
-import { Button, Container } from "@material-ui/core";
+import { Button } from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
 	root: {
