@@ -48,7 +48,11 @@ export default function Post(props) {
 			<CardHeader
 				title={props.authorData.username}
 				subheader={moment(props.date).format("MMMM Do YYYY, h:mm:ss a")}
-				avatar={<Avatar className={classes.avatar}>{props.authorData.avatar}</Avatar>}
+				avatar={
+					<Avatar src={props.authorData.avatar} className={classes.avatar}>
+						{props.authorData.avatar}
+					</Avatar>
+				}
 				action={
 					isOwnPost && (
 						<IconButton aria-label="settings" onClick={() => props.deletePost(props._id)}>
