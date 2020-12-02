@@ -9,6 +9,8 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import axios from "axios";
 import useUser from "../hooks/useUser";
+import { navigate } from "@reach/router";
+
 const useStyles = makeStyles({
 	root: {
 		minWidth: 275
@@ -30,17 +32,13 @@ export default function FriendsPage() {
 	const [friends, setFriends] = useState();
 	const [refreshFriends, setRefreshFriends] = useState(true);
 	const usernameRef = useRef();
-	const { token } = useUser();
+	const { token, user } = useUser();
+
+	if (!user) navigate("/signin");
 
 	function deleteFriend(user) {
 		axios
-			.post(
-				"/api/friends/delete",
-				{
-					recipiant: user
-				},
-				{ headers: { "x-auth-token": token } }
-			)
+			.post("/api/friends/delete", { recipiant: user }, { headers: { "x-auth-token": token } })
 			.then(function ({ data }) {
 				setRefreshFriends(!refreshFriends);
 			});
@@ -48,13 +46,7 @@ export default function FriendsPage() {
 
 	function addFriend(user) {
 		axios
-			.post(
-				"/api/friends",
-				{
-					recipiant: user
-				},
-				{ headers: { "x-auth-token": token } }
-			)
+			.post("/api/friends", { recipiant: user }, { headers: { "x-auth-token": token } })
 			.then(function ({ data }) {
 				setRefreshFriends(!refreshFriends);
 			});
@@ -62,13 +54,7 @@ export default function FriendsPage() {
 
 	function addFriendByUsername(userToSearch) {
 		axios
-			.post(
-				"/api/friends/username",
-				{
-					recipiant: userToSearch
-				},
-				{ headers: { "x-auth-token": token } }
-			)
+			.post("/api/friends/username", { recipiant: userToSearch }, { headers: { "x-auth-token": token } })
 			.then(function ({ data }) {
 				setRefreshFriends(!refreshFriends);
 			});
@@ -81,33 +67,35 @@ export default function FriendsPage() {
 	}, [refreshFriends]);
 
 	return (
-		<Layout>
-			<Grid container>
-				<Grid item>
-					<input ref={usernameRef} placeholder="Add friend" />
-					<button onClick={() => addFriendByUsername(usernameRef.current.value)}>
-						Add Friend By Username
-					</button>
+		user && (
+			<Layout>
+				<Grid container>
+					<Grid item>
+						<input ref={usernameRef} placeholder="Add friend" />
+						<button onClick={() => addFriendByUsername(usernameRef.current.value)}>
+							Add Friend By Username
+						</button>
+					</Grid>
+					{friends ? (
+						<>
+							{friends.friends.map(friend => (
+								<Friend key={friend._id} deleteFriend={deleteFriend} {...friend} />
+							))}
+							{friends.pending.map(friend => (
+								<Requests
+									key={friend._id}
+									deleteFriend={deleteFriend}
+									addFriend={addFriend}
+									{...friend}
+								/>
+							))}
+						</>
+					) : (
+						<Grid item>No friends</Grid>
+					)}
 				</Grid>
-				{friends ? (
-					<>
-						{friends.friends.map(friend => (
-							<Friend key={friend._id} deleteFriend={deleteFriend} {...friend} />
-						))}
-						{friends.pending.map(friend => (
-							<Requests
-								key={friend._id}
-								deleteFriend={deleteFriend}
-								addFriend={addFriend}
-								{...friend}
-							/>
-						))}
-					</>
-				) : (
-					<Grid item>No friends</Grid>
-				)}
-			</Grid>
-		</Layout>
+			</Layout>
+		)
 	);
 }
 

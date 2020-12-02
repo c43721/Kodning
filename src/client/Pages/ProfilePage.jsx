@@ -6,6 +6,7 @@ import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import useUser from "../hooks/useUser";
+import { navigate } from "@reach/router";
 
 const useStyles = makeStyles(theme => ({
 	root: {
@@ -22,23 +23,27 @@ const useStyles = makeStyles(theme => ({
 
 export default function ProfilePage(props) {
 	const classes = useStyles();
-  const { user } = useUser();
-  
+	const { user } = useUser();
+
+	if (!user) navigate("/signin");
+
 	return (
-		<Layout>
-			<div className={classes.root}>
-				<Paper className={classes.paper}>
-					<Grid container wrap="nowrap" spacing={2}>
-						<Grid item>
-							<Avatar> W </Avatar>
+		user && (
+			<Layout>
+				<div className={classes.root}>
+					<Paper className={classes.paper}>
+						<Grid container wrap="nowrap" spacing={2}>
+							<Grid item>
+								<Avatar> W </Avatar>
+							</Grid>
+							<Grid item xs zeroMinWidth>
+								<Typography noWrap>{user.username}</Typography>
+								<Typography noWrap>{user.email}</Typography>
+							</Grid>
 						</Grid>
-						<Grid item xs zeroMinWidth>
-							<Typography noWrap>{user.username}</Typography>
-							<Typography noWrap>{user.email}</Typography>
-						</Grid>
-					</Grid>
-				</Paper>
-			</div>
-		</Layout>
+					</Paper>
+				</div>
+			</Layout>
+		)
 	);
 }
