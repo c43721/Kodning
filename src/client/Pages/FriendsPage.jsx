@@ -55,20 +55,18 @@ export default function FriendsPage() {
 
 	if (!user) navigate("/signin");
 
+	console.log(friends);
+
 	function deleteFriend(user) {
 		axios
 			.post("/api/friends/delete", { recipiant: user }, { headers: { "x-auth-token": token } })
-			.then(function ({ data }) {
-				setRefreshFriends(!refreshFriends);
-			});
+			.then(() => setRefreshFriends(!refreshFriends));
 	}
 
 	function addFriend(user) {
 		axios
 			.post("/api/friends", { recipiant: user }, { headers: { "x-auth-token": token } })
-			.then(function ({ data }) {
-				setRefreshFriends(!refreshFriends);
-			});
+			.then(() => setRefreshFriends(!refreshFriends));
 	}
 
 	function addFriendByUsername(userToSearch) {
@@ -78,9 +76,7 @@ export default function FriendsPage() {
 				{ recipiant: userToSearch },
 				{ headers: { "x-auth-token": token } }
 			)
-			.then(function ({ data }) {
-				setRefreshFriends(!refreshFriends);
-			});
+			.then(() => setRefreshFriends(!refreshFriends));
 	}
 
 	useEffect(() => {
@@ -113,7 +109,7 @@ export default function FriendsPage() {
 									</>
 								)}
 								<br />
-								{friends.requests && (
+								{friends.pending && (
 									<>
 										<Typography variant="h2" component="h2">
 											Requests
@@ -125,6 +121,17 @@ export default function FriendsPage() {
 												addFriend={addFriend}
 												{...friend}
 											/>
+										))}
+									</>
+								)}
+								<br />
+								{friends.requests && (
+									<>
+										<Typography variant="h2" component="h2">
+											Pending
+										</Typography>
+										{friends.requests.map(friend => (
+											<Pending key={friend._id} {...friend} />
 										))}
 									</>
 								)}
@@ -192,6 +199,21 @@ function Requests(props) {
 						Accept{" "}
 					</Button>
 				</CardActions>
+			</Card>
+		</Grid>
+	);
+}
+
+function Pending(props) {
+	const classes = useStyles();
+	return (
+		<Grid item>
+			<Card className={classes.root}>
+				<CardContent>
+					<Typography className={classes.title} color="textSecondary" gutterBottom>
+						{props.username}
+					</Typography>
+				</CardContent>
 			</Card>
 		</Grid>
 	);

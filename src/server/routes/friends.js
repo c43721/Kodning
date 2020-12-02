@@ -31,16 +31,18 @@ async function getFriendsFromUser(userId) {
 
 	const friends = [];
 	const pending = [];
+	const requested = [];
 
 	if (!userDoc.friends) return { friends: [], pending: [] };
 
 	for (const [key, value] of userDoc.friends) {
 		if (value === FriendStatus.ACCEPTED) friends.push(key);
 		else if (value === FriendStatus.PENDING) pending.push(key);
+		else if (value === FriendStatus.REQUESTED) requested.push(key);
 		else continue;
 	}
 
-	return { friends, pending };
+	return { friends, pending, requested };
 }
 
 //All routes need to be auth'd
@@ -49,14 +51,15 @@ router.use(checkAuth);
 router.get("/", async (req, res) => {
 	const user = req.user;
 
-	const { friends, pending } = await getFriendsFromUser(user._id);
+	const { friends, pending, requested } = await getFriendsFromUser(user._id);
 
-	const [friendObjects, pendingObjects] = await Promise.all([
+	const [friendObjects, pendingObjects, requestObjects ] = await Promise.all([
 		getAllFriendObjectFromId(friends),
-		getAllFriendObjectFromId(pending)
+		getAllFriendObjectFromId(pending),
+		getAllFriendObjectFromId(requested)
 	]);
 
-	res.status(200).json({ friends: friendObjects, pending: pendingObjects });
+	res.status(200).json({ friends: friendObjects, pending: pendingObjects, requests: requestObjects });
 });
 
 router.post("/username", async (req, res) => {
