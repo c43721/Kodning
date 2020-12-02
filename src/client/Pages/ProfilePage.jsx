@@ -28,8 +28,6 @@ export default function ProfilePage(props) {
 	const { user, token } = useUser();
 	const [file, setFile] = useState();
 
-	console.log(user);
-
 	if (!user) navigate("/signin");
 
 	function onAvatarSubmit(e) {
