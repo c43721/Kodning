@@ -27,6 +27,10 @@ const userSchema = new mongoose.Schema({
 	avatar: {
 		type: String
 	},
+	status: {
+		type: String,
+		default: "Offline"
+	},
 	friends: {
 		type: Map,
 		of: String,

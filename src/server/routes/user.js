@@ -8,6 +8,20 @@ const uploadPath = path.join("uploads", "avatars");
 
 router.use(checkAuth);
 
+router.patch("/status", async (req, res) => {
+	try {
+		const { status } = req.body;
+		const user = await User.findById(req.user._id);
+
+		user.status = status;
+		console.log(user.status)
+
+		await user.save();
+	} catch (err) {
+		res.status(500).json({ error: "Internal service" });
+	}
+});
+
 router.patch("/avatar", async (req, res) => {
 	try {
 		const file = req.files.file;
