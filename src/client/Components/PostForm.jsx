@@ -43,10 +43,11 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function PostForm() {
+export default function PostForm({ onPostSubmit }) {
   const classes = useStyles();
 
   const CHARACTER_LIMIT = 140;
+
   const [values, setValues] = useState({
     character: "",
   });
@@ -55,10 +56,7 @@ export default function PostForm() {
     setValues({ ...values, [character]: event.target.value });
   };
 
-  const sendPost = e => {
-    e.preventDefault();
-    console.log("submit");
-  };
+  function addPost()
 
   return (
     <div>
@@ -85,7 +83,9 @@ export default function PostForm() {
           <AddToPhotosIcon />
           <VideoLibraryIcon />
         </div>
-        <Button className={classes.button} onClick={sendPost}>
+        <Button
+          className={classes.button}
+          onClick={() => addPost(postRef.current.value)}>
           Post
         </Button>
       </form>
