@@ -10,6 +10,7 @@ import Typography from "@material-ui/core/Typography";
 import axios from "axios";
 import useUser from "../hooks/useUser";
 import { navigate } from "@reach/router";
+import { Avatar, CardHeader, Container } from "@material-ui/core";
 
 const useStyles = makeStyles({
 	root: {
@@ -54,7 +55,11 @@ export default function FriendsPage() {
 
 	function addFriendByUsername(userToSearch) {
 		axios
-			.post("/api/friends/username", { recipiant: userToSearch }, { headers: { "x-auth-token": token } })
+			.post(
+				"/api/friends/username",
+				{ recipiant: userToSearch },
+				{ headers: { "x-auth-token": token } }
+			)
 			.then(function ({ data }) {
 				setRefreshFriends(!refreshFriends);
 			});
@@ -69,31 +74,46 @@ export default function FriendsPage() {
 	return (
 		user && (
 			<Layout>
-				<Grid container>
-					<Grid item>
-						<input ref={usernameRef} placeholder="Add friend" />
-						<button onClick={() => addFriendByUsername(usernameRef.current.value)}>
-							Add Friend By Username
-						</button>
+				<Container style={{ marginTop: 15 }}>
+					<Grid container justify="center" alignItems="center" direction="column" spacing={3}>
+						<Grid item>
+							<input ref={usernameRef} placeholder="Add friend" />
+							<button onClick={() => addFriendByUsername(usernameRef.current.value)}>
+								Add Friend By Username
+							</button>
+						</Grid>
+						{friends && (
+							<>
+								{friends.friends && (
+									<>
+										<Typography variant="h2" component="h1">
+											Friends
+										</Typography>
+										{friends.friends.map(friend => (
+											<Friend key={friend._id} deleteFriend={deleteFriend} {...friend} />
+										))}
+									</>
+								)}
+								<br />
+								{friends.requests && (
+									<>
+										<Typography variant="h2" component="h2">
+											Requests
+										</Typography>
+										{friends.pending.map(friend => (
+											<Requests
+												key={friend._id}
+												deleteFriend={deleteFriend}
+												addFriend={addFriend}
+												{...friend}
+											/>
+										))}
+									</>
+								)}
+							</>
+						)}
 					</Grid>
-					{friends ? (
-						<>
-							{friends.friends.map(friend => (
-								<Friend key={friend._id} deleteFriend={deleteFriend} {...friend} />
-							))}
-							{friends.pending.map(friend => (
-								<Requests
-									key={friend._id}
-									deleteFriend={deleteFriend}
-									addFriend={addFriend}
-									{...friend}
-								/>
-							))}
-						</>
-					) : (
-						<Grid item>No friends</Grid>
-					)}
-				</Grid>
+				</Container>
 			</Layout>
 		)
 	);
@@ -104,14 +124,14 @@ function Friend(props) {
 	return (
 		<Grid item>
 			<Card className={classes.root}>
-				<CardContent>
-					<Typography className={classes.title} color="textSecondary" gutterBottom>
-						{props.username}
-					</Typography>
-					<Typography variant="body2" component="p">
-						<br />
-					</Typography>
-				</CardContent>
+				<CardHeader
+					avatar={
+						<Avatar aria-label="recipe" src={props.avatar}>
+							{props.avatar}
+						</Avatar>
+					}
+					title={props.username}
+				/>
 				<CardActions>
 					<Button size="small" onClick={() => props.deleteFriend(props._id)}>
 						{" "}
