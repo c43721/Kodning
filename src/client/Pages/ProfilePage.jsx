@@ -34,7 +34,7 @@ export default function ProfilePage(props) {
 					<Paper className={classes.paper}>
 						<Grid container wrap="nowrap" spacing={2}>
 							<Grid item>
-								<Avatar> W </Avatar>
+								<Avatar>{user.avatar}</Avatar>
 							</Grid>
 							<Grid item xs zeroMinWidth>
 								<Typography noWrap>{user.username}</Typography>
