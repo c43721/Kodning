@@ -68,7 +68,7 @@ export default function PostForm({ onPostSubmit }) {
 						placeholder="Hello World!"
 						variant="outlined"
 						inputProps={{
-							maxlength: CHARACTER_LIMIT
+							maxLength: CHARACTER_LIMIT
 						}}
 						value={values.character}
 						helperText={`${values.character.length}/${CHARACTER_LIMIT}`}
@@ -77,7 +77,7 @@ export default function PostForm({ onPostSubmit }) {
 						fullWidth
 					/>
 				</div>
-				<div item className={classes.icons}>
+				<div className={classes.icons}>
 					<AddToPhotosIcon />
 					<VideoLibraryIcon />
 				</div>

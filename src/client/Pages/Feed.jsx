@@ -23,13 +23,13 @@ export default function Feed() {
 
 	function deletePost(postId) {
 		axios
-			.delete(`/api/posts/${postId}`, { withCredentials: true, headers: { "x-auth-token": token } })
+			.delete(`/api/posts/${postId}`, { headers: { "x-auth-token": token } })
 			.then(() => setRefreshPost(!refreshPost));
 	}
 
 	function likePost(postId) {
 		axios
-			.put(`/api/posts/likes/${postId}`, {}, { withCredentials: true, headers: { "x-auth-token": token } })
+			.put(`/api/posts/likes/${postId}`, {}, { headers: { "x-auth-token": token } })
 			.then(() => setRefreshPost(!refreshPost));
 	}
 
@@ -37,10 +37,8 @@ export default function Feed() {
 		axios
 			.get("/api/posts", { headers: { "x-auth-token": token } })
 			.then(({ data }) => setPosts(data))
-			.catch(err => console.log(err)); 
+			.catch(err => console.log(err));
 	}, [refreshPost]);
-
-	console.log(posts);
 
 	return (
 		user && (

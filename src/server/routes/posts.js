@@ -34,7 +34,7 @@ router.get("/", async (req, res) => {
 				const userFromPost = await User.findById(user);
 
 				return {
-					user: {
+					authorData: {
 						avatar: userFromPost.username.charAt(0),
 						username: userFromPost.username
 					},
@@ -76,18 +76,13 @@ router.post("/", async (req, res) => {
 router.put("/likes/:post_id", async (req, res) => {
 	try {
 		const post = await Post.findById(req.params.post_id);
-		console.log(post);
 
 		if (!post) return res.status(404).json("Post not found");
 
-		if (post.likes.find(like => like.username === req.user._id))
+		if (post.likes.filter(like => like === req.user._id).length > 0)
 			return res.status(401).json({ error: "You already liked this post!" });
 
-		const newLike = {
-			user: req.user._id
-		};
-
-		post.likes.push(newLike);
+		post.likes.push(req.user._id.toString());
 
 		await post.save();
 
@@ -104,7 +99,7 @@ router.delete("/:post_id", async (req, res) => {
 
 		if (!post) return res.status(404).json({ error: "Not found" });
 
-		if (post.user._id !== req.user._id) return res.status(401).json({ error: "Unauthorized!" });
+		if (post.user._id === req.user._id) return res.status(401).json({ error: "Unauthorized!" });
 
 		await post.remove();
 
