@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Layout from "../Components/Layout";
 import Grid from "@material-ui/core/Grid";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
@@ -10,7 +10,7 @@ import Typography from "@material-ui/core/Typography";
 import axios from "axios";
 import useUser from "../hooks/useUser";
 import { navigate } from "@reach/router";
-import { Avatar, CardHeader, Container } from "@material-ui/core";
+import { Avatar, Badge, CardHeader, Container } from "@material-ui/core";
 
 const useStyles = makeStyles({
 	root: {
@@ -28,6 +28,24 @@ const useStyles = makeStyles({
 		marginBottom: 12
 	}
 });
+
+const StyledBadge = withStyles(theme => ({
+	badge: {
+		backgroundColor: "#44b700",
+		color: "#44b700",
+		boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
+		"&::after": {
+			position: "absolute",
+			top: 0,
+			left: 0,
+			width: "100%",
+			height: "100%",
+			borderRadius: "50%",
+			animation: "$ripple 1.2s infinite ease-in-out",
+			content: '""'
+		}
+	}
+}))(Badge);
 
 export default function FriendsPage() {
 	const [friends, setFriends] = useState();
@@ -126,9 +144,18 @@ function Friend(props) {
 			<Card className={classes.root}>
 				<CardHeader
 					avatar={
-						<Avatar aria-label="recipe" src={props.avatar}>
-							{props.avatar}
-						</Avatar>
+						<StyledBadge
+							overlap="circle"
+							anchorOrigin={{
+								vertical: "bottom",
+								horizontal: "right"
+							}}
+							variant="dot"
+						>
+							<Avatar aria-label="recipe" src={props.avatar}>
+								{props.avatar}
+							</Avatar>
+						</StyledBadge>
 					}
 					title={props.username}
 				/>
