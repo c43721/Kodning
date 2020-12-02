@@ -30,7 +30,8 @@
     "mongoose": "^5.10.15",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
-    "react-page-visibility": "^6.2.0"
+    "react-page-visibility": "^6.2.0",
+    "socket.io": "^3.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

@@ -2,9 +2,14 @@ const express = require("express");
 const cors = require("cors");
 const config = require("config");
 const mongoose = require("mongoose");
+const http = require("http");
+const sio = require("socket.io");
+
 const fileUpload = require("express-fileupload");
 
 const app = express();
+const server = http.createServer(app);
+const io = sio(server);
 
 //Connect to mongodb
 try {
@@ -27,7 +32,7 @@ const UserRoute = require("./routes/user");
 
 app.use(express.static("dist"));
 app.use(cors());
-app.use(fileUpload())
+app.use(fileUpload());
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ limit: "10mb", extended: true }));
 
@@ -40,6 +45,18 @@ app.all("*", (req, res) => {
 	res.status(404).send(`Cannot find ${req.method} method for route ${req.path}`);
 });
 
-app.listen(process.env.PORT || 8080, () =>
+server.listen(process.env.PORT || 8080, () =>
 	console.log(`Listening on port http://localhost:${process.env.PORT || 8080}/!`)
 );
+
+const ioUser = io.of("/user");
+
+const authSocket = socket => {
+	socket.use(_, next => {
+		next();
+	});
+};
+
+ioUser.on("connection", socket => {
+	authSocket();
+});
