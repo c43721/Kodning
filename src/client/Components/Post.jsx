@@ -14,68 +14,56 @@ import ShareIcon from "@material-ui/icons/Share";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    maxWidth: 500,
-    borderRadius: "20px",
-    marginBottom: theme.spacing(2),
-  },
-  media: {
-    height: 0,
-    paddingTop: "56.25%", // 16:9
-    borderRadius: "20px",
-  },
-  avatar: {
-    backgroundColor: red[500],
-  },
-  likeBtnOutline: {
-    color: "#000abf",
-  },
-  span: {
-    fontSize: "17px",
-    paddingLeft: "4px",
-  },
+	root: {
+		maxWidth: 500,
+		width: "100%",
+		borderRadius: "20px",
+		marginBottom: theme.spacing(2)
+	},
+	media: {
+		height: 0,
+		paddingTop: "56.25%", // 16:9
+		borderRadius: "20px"
+	},
+	avatar: {
+		backgroundColor: red[500]
+	},
+	likeBtnOutline: {
+		color: "#000abf"
+	},
+	span: {
+		fontSize: "17px",
+		paddingLeft: "4px"
+	}
 }));
 
-export default function Post() {
-  const classes = useStyles();
-  const [post, setPost] = useState([]);
-  const [like, setLike] = useState(0);
+export default function Post(props) {
+	const classes = useStyles();
 
-  const likeButton = e => {
-    e.preventDefault();
-    setLike(like + 1);
-    console.log("clicked");
-  };
-
-  return (
-    <Card className={classes.root}>
-      <CardHeader
-        avatar={
-          <Avatar className={classes.avatar}>R{/* {user.length[0]} */}</Avatar>
-        }
-        action={
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
-          </IconButton>
-        }
-        // title={user}
-        // subheader={date}
-      />
-      <CardContent>
-        <Typography variant="body2" color="textSecondary" component="p">
-          blog post
-          {/* {content} */}
-        </Typography>
-      </CardContent>
-      <CardActions disableSpacing>
-        <IconButton onClick={likeButton} className={classes.likeBtnOutline}>
-          <FavoriteBorderIcon />
-          <span className={classes.span}>{like}</span>
-        </IconButton>
-        <IconButton aria-label="share">
-          <ShareIcon />
-        </IconButton>
-      </CardActions>
-    </Card>
-  );
+	return (
+		<Card className={classes.root}>
+			<CardHeader
+				avatar={<Avatar className={classes.avatar}>{props.user.avatar}</Avatar>}
+				action={
+					<IconButton aria-label="settings">
+						<MoreVertIcon />
+					</IconButton>
+				}
+			/>
+			<CardContent>
+				<Typography variant="body2" color="textSecondary" component="p">
+					{props.content}
+				</Typography>
+			</CardContent>
+			<CardActions disableSpacing>
+				<IconButton onClick={() => props.likePost(props._id)} className={classes.likeBtnOutline}>
+					<FavoriteBorderIcon />
+					<span className={classes.span}>{props.likes.length}</span>
+				</IconButton>
+				<IconButton aria-label="share">
+					<ShareIcon />
+				</IconButton>
+			</CardActions>
+		</Card>
+	);
 }

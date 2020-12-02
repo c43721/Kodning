@@ -3,63 +3,59 @@ import React, { useEffect, useRef, useState } from "react";
 import Layout from "../Components/Layout";
 import Post from "../Components/Post";
 import PostForm from "../Components/PostForm";
+import useUser from "../hooks/useUser";
+import axios from "axios";
 
 export default function Feed() {
-  const classes = useStyles();
+	const [posts, setPosts] = useState([]);
+	const [refreshPost, setRefreshPost] = useState(true);
 
-  const [post, setPost] = useState();
-  const [refreshPost, setRefreshPost] = useState(true);
-  const postRef = useRef();
-  const { token } = useUser();
+	const { token } = useUser();
 
-  function addPost(post) {
-    axios
-      .post("/api/posts", {
-        content: post,
-      })
-      .then(function ({ data }) {
-        setRefreshPost(!refreshPost);
-      });
-  }
+	function addPost({ character }) {
+		axios
+			.post(
+				"/api/posts",
+				{
+					content: character
+				},
+				{ headers: { "x-auth-token": token } }
+			)
+			.then(() => setRefreshPost(!refreshPost));
+	}
 
-  function deletePost(post) {
-    axios
-      .post("/api/posts/:id", {
-        content: post,
-      })
-      .then(function ({ data }) {
-        setRefreshPost(!refreshPost);
-      });
-  }
+	function deletePost(postId) {
+		axios
+			.delete(`/api/posts/${postId}`, { headers: { "x-auth-token": token } })
+			.then(() => setRefreshPost(!refreshPost));
+	}
 
-  function addLikes(like) {
-    axios
-      .put("/likes/:post_id", {
-        user: like,
-      })
-      .then(function ({ data }) {
-        setRefreshPost(!refreshPost);
-      });
-  }
+	function likePost(postId) {
+		axios
+			.put(`/api/posts/likes/${postId}`, { headers: { "x-auth-token": token } })
+			.then(() => setRefreshPost(!refreshPost));
+	}
 
-  useEffect(() => {
-    axios.get("/api/posts").then(function ({ data }) {
-      setPost(data);
-    });
-  }, [refreshPost]);
+	useEffect(() => {
+		axios
+			.get("/api/posts", { headers: { "x-auth-token": token } })
+			.then(({ data }) => setPosts(data))
+			.catch(err => console.log(err));
+	}, [refreshPost]);
 
-  return (
-    <Layout>
-      <Container>
-        <Grid
-          container
-          justify="flex-end"
-          alignItems="center"
-          direction="column">
-          <PostForm onPostSubmit={addPost} />
-          <Post addLike={addLikes} />
-        </Grid>
-      </Container>
-    </Layout>
-  );
+	console.log(posts);
+
+	return (
+		<Layout>
+			<Container>
+				<Grid container justify="flex-end" alignItems="center" direction="column">
+					<PostForm onPostSubmit={addPost} />
+					{posts.length > 0 &&
+						posts.map(post => (
+							<Post key={post._id} likePost={likePost} deletePost={deletePost} {...post} />
+						))}
+				</Grid>
+			</Container>
+		</Layout>
+	);
 }

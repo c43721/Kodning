@@ -13,7 +13,7 @@ const postSchema = new mongoose.Schema({
 	},
 	date: {
 		type: Date,
-		default: Date.now()
+		default: Date.now
 	},
 	likes: [{
 			type: mongoose.Schema.Types.ObjectId,
@@ -24,9 +24,7 @@ const postSchema = new mongoose.Schema({
 const Post = mongoose.model("Post", postSchema);
 
 function validatePosts(blog) {
-	const schema = Joi.object({
-		content: Joi.string().maxlength(140).required(),
-	});
+	const schema = Joi.string().max(140).required();
 	return schema.validate(blog);
 }
 
