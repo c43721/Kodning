@@ -35,7 +35,7 @@ router.get("/", async (req, res) => {
 
 				return {
 					authorData: {
-						avatar: userFromPost.username.charAt(0),
+						avatar: userFromPost.avatar || userFromPost.username.charAt(0),
 						username: userFromPost.username
 					},
 					..._doc

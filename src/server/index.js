@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const config = require("config");
 const mongoose = require("mongoose");
+const fileUpload = require("express-fileupload");
 
 const app = express();
 
@@ -25,14 +26,15 @@ const FriendRoute = require("./routes/friends");
 const UserRoute = require("./routes/user");
 
 app.use(express.static("dist"));
-app.use(express.json());
 app.use(cors());
+app.use(fileUpload())
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ limit: "10mb", extended: true }));
 
 app.use("/api/auth", AuthRoute);
 app.use("/api/posts", PostRoute);
 app.use("/api/friends", FriendRoute);
 app.use("/api/users", UserRoute);
-
 
 app.all("*", (req, res) => {
 	res.status(404).send(`Cannot find ${req.method} method for route ${req.path}`);

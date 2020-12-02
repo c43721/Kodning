@@ -8,6 +8,7 @@ import Grid from "@material-ui/core/Grid";
 import useUser from "../hooks/useUser";
 import { navigate } from "@reach/router";
 import { Button } from "@material-ui/core";
+import axios from "axios";
 
 const useStyles = makeStyles(theme => ({
 	root: {
@@ -24,32 +25,24 @@ const useStyles = makeStyles(theme => ({
 
 export default function ProfilePage(props) {
 	const classes = useStyles();
-	const { user } = useUser();
+	const { user, token } = useUser();
+	const [file, setFile] = useState();
 
-	const [avatar, setAvatar] = useState();
+	console.log(user);
 
 	if (!user) navigate("/signin");
 
 	function onAvatarSubmit(e) {
 		e.preventDefault();
 
-		console.log(avatar);
-	}
+		if (!file) return;
 
-	function onAvatarChange(e) {
-		const file = e.target.files[0];
+		const formData = new FormData();
+		formData.append("file", file);
 
-		if (file) {
-			const reader = new FileReader();
-
-			reader.onload = e => {
-				const binaryString = e.target.result;
-
-				setAvatar(btoa(binaryString));
-			};
-
-			reader.readAsBinaryString(file);
-		}
+		axios
+			.patch("/api/users/avatar", formData, { headers: { "x-auth-token": token } })
+			.then(({ data }) => console.log(data));
 	}
 
 	return (
@@ -59,7 +52,7 @@ export default function ProfilePage(props) {
 					<Paper className={classes.paper}>
 						<Grid container wrap="nowrap" spacing={2}>
 							<Grid item>
-								<Avatar src={avatar ? `data:image/png;base64,${avatar}` : user.avatar}>{avatar ? `data:image/png;base64,${avatar}` : user.avatar}</Avatar>
+								<Avatar src={user.avatar}>{user.avatar}</Avatar>
 							</Grid>
 							<Grid item xs zeroMinWidth>
 								<Typography noWrap>{user.username}</Typography>
@@ -68,8 +61,14 @@ export default function ProfilePage(props) {
 						</Grid>
 						<Grid container>
 							<Grid item xs zeroMinWidth>
-								<form onSubmit={e => onAvatarSubmit(e)} onChange={e => onAvatarChange(e)}>
-									<input type="file" name="avatar" id="avatar" accept=".jpg, .png, .jpg" />
+								<form onSubmit={e => onAvatarSubmit(e)} encType="multipart/form-data">
+									<input
+										type="file"
+										name="avatar"
+										id="avatar"
+										accept=".jpg, .png, .jpg"
+										onChange={e => setFile(e.target.files[0])}
+									/>
 									<Button variant="contained" type="submit">
 										Change Avatar
 									</Button>

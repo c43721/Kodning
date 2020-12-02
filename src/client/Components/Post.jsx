@@ -42,13 +42,20 @@ export default function Post(props) {
 	const { user } = useUser();
 
 	const isOwnPost = user._id === props.user;
-
+	
 	return (
 		<Card className={classes.root}>
 			<CardHeader
 				title={props.authorData.username}
 				subheader={moment(props.date).format("MMMM Do YYYY, h:mm:ss a")}
-				avatar={<Avatar className={classes.avatar}>{props.authorData.avatar}</Avatar>}
+				avatar={
+					<Avatar
+						src={props.authorData.avatar.length > 2 ? `data:image/png;base64,${props.authorData.avatar}` : props.authorData.avatar}
+						className={classes.avatar}
+					>
+						{props.authorData.avatar.length > 2 ? `data:image/png;base64,${props.authorData.avatar}` : props.authorData.avatar}
+					</Avatar>
+				}
 				action={
 					isOwnPost && (
 						<IconButton aria-label="settings" onClick={() => props.deletePost(props._id)}>
